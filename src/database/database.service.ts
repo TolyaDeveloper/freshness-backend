@@ -1,17 +1,22 @@
 import { injectable, inject } from 'inversify'
 import { TYPES } from '../types'
 import { ILoggerService } from '../logger/logger.service.interface'
+import { IConfigService } from '../config/config.service.interface'
+import { IDatabaseService } from './database.service.interface'
 import mongoose from 'mongoose'
 
 @injectable()
-class Database {
-  constructor(@inject(TYPES.LoggerService) private logger: ILoggerService) {}
+class Database implements IDatabaseService {
+  constructor(
+    @inject(TYPES.LoggerService) private logger: ILoggerService,
+    @inject(TYPES.ConfigService) private configService: IConfigService
+  ) {}
 
   public async connect(): Promise<void> {
     try {
-      await mongoose.connect('mongodb://localhost:27017/freshness')
+      await mongoose.connect(this.configService.get('DATABASE_URI_DEVELOPMENT'))
 
-      this.logger.info('Connected to the database!')
+      this.logger.info('[Database] Connected successfully')
     } catch (err) {
       if (err instanceof Error) {
         this.logger.error(err.message)
@@ -23,7 +28,7 @@ class Database {
     try {
       await mongoose.disconnect()
 
-      this.logger.info('Disconnected from the database!')
+      this.logger.info('[Database] Disconnected successfully')
     } catch (err) {
       if (err instanceof Error) {
         this.logger.error(err.message)
