@@ -1,9 +1,10 @@
 import express, { Express } from 'express'
 import { Server } from 'http'
 import { injectable, inject } from 'inversify'
-import helmet from 'helmet'
-import { Database } from './database/database.service'
 import { TYPES } from './types'
+import { Database } from './database/database.service'
+import { ILoggerService } from './logger/logger.service.interface'
+import helmet from 'helmet'
 
 @injectable()
 class App {
@@ -11,7 +12,10 @@ class App {
   public app: Express
   public server: Server
 
-  constructor(@inject(TYPES.Database) private database: Database) {
+  constructor(
+    @inject(TYPES.Database) private database: Database,
+    @inject(TYPES.LoggerService) private logger: ILoggerService
+  ) {
     this.port = 8000
     this.app = express()
   }
@@ -25,7 +29,7 @@ class App {
 
     await this.database.connect()
     this.server = this.app.listen(this.port, () => {
-      console.log(`Server is working at ${this.port} port`)
+      this.logger.info(`Server is working at ${this.port} port`)
     })
   }
 
