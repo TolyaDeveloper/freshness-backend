@@ -1,7 +1,9 @@
 import express, { Express } from 'express'
 import { Server } from 'http'
-import { injectable } from 'inversify'
+import { injectable, inject } from 'inversify'
 import helmet from 'helmet'
+import { Database } from './database/database.service'
+import { TYPES } from './types'
 
 @injectable()
 class App {
@@ -9,7 +11,7 @@ class App {
   public app: Express
   public server: Server
 
-  constructor() {
+  constructor(@inject(TYPES.Database) private database: Database) {
     this.port = 8000
     this.app = express()
   }
@@ -21,6 +23,7 @@ class App {
   public async run(): Promise<void> {
     this.useMiddlewares()
 
+    await this.database.connect()
     this.server = this.app.listen(this.port, () => {
       console.log(`Server is working at ${this.port} port`)
     })
