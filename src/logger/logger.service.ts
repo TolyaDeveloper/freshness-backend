@@ -15,15 +15,15 @@ class LoggerService implements ILoggerService {
     })
   }
 
-  info(...args: unknown[]): void {
+  public info(...args: unknown[]): void {
     this.logger.info(...args)
   }
 
-  warn(...args: unknown[]): void {
+  public warn(...args: unknown[]): void {
     this.logger.warn(...args)
   }
 
-  error(...args: unknown[]): void {
+  public error(...args: unknown[]): void {
     this.logger.error(...args)
   }
 }

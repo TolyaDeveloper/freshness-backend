@@ -29,7 +29,7 @@ class App {
 
     await this.database.connect()
     this.server = this.app.listen(this.port, () => {
-      this.logger.info(`Server is running at ${this.port} port`)
+      this.logger.info(`Server is working at ${this.port} port`)
     })
   }
 
