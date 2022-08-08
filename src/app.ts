@@ -6,7 +6,7 @@ import { IDatabaseService } from './database/database.service.interface'
 import { ILoggerService } from './logger/logger.service.interface'
 import { IConfigService } from './config/config.service.interface'
 import { IExceptionFilter } from './exceptions/exception.filter.interface'
-import { CategoriesController } from './modules/categories/categories.controller'
+import { ICategoriesController } from './modules/categories/interfaces/categories.controller.interface'
 import helmet from 'helmet'
 
 @injectable()
@@ -21,7 +21,7 @@ class App {
     @inject(TYPES.ConfigService) private configService: IConfigService,
     @inject(TYPES.ExceptionFilter) private exceptionFilter: IExceptionFilter,
     @inject(TYPES.CategoriesController)
-    private categoriesController: CategoriesController
+    private categoriesController: ICategoriesController
   ) {
     this.port = Number(this.configService.get('PORT'))
     this.app = express()

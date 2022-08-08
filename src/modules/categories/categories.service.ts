@@ -11,7 +11,7 @@ class CategoriesService {
     private categoriesRepository: ICategoriesRepository
   ) {}
 
-  public async getAllCategories(): Promise<ICategoryModel> {
+  public async findAllCategories(): Promise<ICategoryModel> {
     return this.categoriesRepository.find()
   }
 

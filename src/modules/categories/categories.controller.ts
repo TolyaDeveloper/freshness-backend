@@ -21,7 +21,7 @@ class CategoriesController
     super(logger)
 
     this.bindRoutes([
-      { method: 'get', path: '/categories', func: this.getCategories },
+      { method: 'get', path: '/categories', func: this.findAllCategories },
       {
         method: 'post',
         path: '/categories/add',
@@ -31,13 +31,13 @@ class CategoriesController
     ])
   }
 
-  public async getCategories(
+  public async findAllCategories(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const categories = await this.categoriesService.getAllCategories()
+      const categories = await this.categoriesService.findAllCategories()
 
       res.json(categories)
     } catch (err) {
