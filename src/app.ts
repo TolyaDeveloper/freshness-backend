@@ -6,6 +6,7 @@ import { IDatabaseService } from './database/database.service.interface'
 import { ILoggerService } from './logger/logger.service.interface'
 import { IConfigService } from './config/config.service.interface'
 import { IExceptionFilter } from './exceptions/exception.filter.interface'
+import { ICategoriesController } from './modules/categories/interfaces/categories.controller.interface'
 import helmet from 'helmet'
 
 @injectable()
@@ -18,7 +19,9 @@ class App {
     @inject(TYPES.Database) private database: IDatabaseService,
     @inject(TYPES.LoggerService) private logger: ILoggerService,
     @inject(TYPES.ConfigService) private configService: IConfigService,
-    @inject(TYPES.ExceptionFilter) private exceptionFilter: IExceptionFilter
+    @inject(TYPES.ExceptionFilter) private exceptionFilter: IExceptionFilter,
+    @inject(TYPES.CategoriesController)
+    private categoriesController: ICategoriesController
   ) {
     this.port = Number(this.configService.get('PORT'))
     this.app = express()
@@ -26,6 +29,11 @@ class App {
 
   private useMiddlewares(): void {
     this.app.use(helmet())
+    this.app.use(express.json())
+  }
+
+  private useControllers(): void {
+    this.app.use(this.categoriesController.router)
   }
 
   private useExceptionFilters(): void {
@@ -34,6 +42,7 @@ class App {
 
   public async run(): Promise<void> {
     this.useMiddlewares()
+    this.useControllers()
     this.useExceptionFilters()
 
     await this.database.connect()
