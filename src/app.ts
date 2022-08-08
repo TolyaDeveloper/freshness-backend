@@ -29,6 +29,7 @@ class App {
 
   private useMiddlewares(): void {
     this.app.use(helmet())
+    this.app.use(express.json())
   }
 
   private useControllers(): void {

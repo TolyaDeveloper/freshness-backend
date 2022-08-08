@@ -1,7 +1,8 @@
 import { inject, injectable } from 'inversify'
-import { ICategoryModel } from '../../models/category.model'
 import { TYPES } from '../../types'
+import { ICategoryModel } from '../../models/category.model'
 import { ICategoriesRepository } from './interfaces/categories.repository.interface'
+import { CategoryDto } from './dto/category.dto'
 
 @injectable()
 class CategoriesService {
@@ -12,6 +13,12 @@ class CategoriesService {
 
   public async getAllCategories(): Promise<ICategoryModel> {
     return this.categoriesRepository.find()
+  }
+
+  public async addCategories(
+    categories: CategoryDto[]
+  ): Promise<ICategoryModel[]> {
+    return this.categoriesRepository.add(categories)
   }
 }
 

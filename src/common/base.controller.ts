@@ -22,8 +22,8 @@ abstract class BaseController {
       const handler = func.bind(this)
       const pipeline = middleware ? [...middleware, handler] : handler
 
-      this.logger.info(`[Controller] [${method}] -> ${path} created`)
       this.router[method](path, pipeline)
+      this.logger.info(`[Controller] [${method}] -> ${path} created`)
     })
   }
 }

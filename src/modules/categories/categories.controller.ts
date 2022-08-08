@@ -6,6 +6,8 @@ import { TYPES } from '../../types'
 import { ICategoriesService } from './interfaces/categories.service.interface'
 import { HttpError } from '../../exceptions/http-error.class'
 import { ILoggerService } from '../../logger/logger.service.interface'
+import { CategoryDto } from './dto/category.dto'
+import { ValidateMiddleware } from '../../common/validate.middleware'
 
 @injectable()
 class CategoriesController
@@ -19,7 +21,13 @@ class CategoriesController
     super(logger)
 
     this.bindRoutes([
-      { method: 'get', path: '/categories', func: this.getCategories }
+      { method: 'get', path: '/categories', func: this.getCategories },
+      {
+        method: 'post',
+        path: '/categories/add',
+        func: this.addCategories,
+        middlewares: [new ValidateMiddleware(CategoryDto)]
+      }
     ])
   }
 
@@ -39,6 +47,20 @@ class CategoriesController
           'Could not get categories! Service might be unavailable'
         )
       )
+    }
+  }
+
+  public async addCategories(
+    req: Request<{}, {}, CategoryDto[]>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      await this.categoriesService.addCategories(req.body)
+
+      res.json({ message: 'New categories have been saved!' })
+    } catch (err) {
+      next(new HttpError(500, 'Could not save new categories!'))
     }
   }
 }
