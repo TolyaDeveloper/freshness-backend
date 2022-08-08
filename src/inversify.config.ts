@@ -9,6 +9,12 @@ import { ConfigService } from './config/config.service'
 import { IConfigService } from './config/config.service.interface'
 import { ExceptionFilter } from './exceptions/exception.filter'
 import { IExceptionFilter } from './exceptions/exception.filter.interface'
+import { AuthController } from './modules/auth/auth.controller'
+import { IAuthController } from './modules/auth/interfaces/auth.controller.interface'
+import { AuthRepository } from './modules/auth/auth.repository'
+import { IAuthRepository } from './modules/auth/interfaces/auth.repository.interface'
+import { AuthService } from './modules/auth/auth.service'
+import { IAuthService } from './modules/auth/interfaces/auth.service.interface'
 import { CategoriesController } from './modules/categories/categories.controller'
 import { ICategoriesController } from './modules/categories/interfaces/categories.controller.interface'
 import { CategoriesRepository } from './modules/categories/categories.repository'
@@ -29,6 +35,10 @@ const bindings = new ContainerModule((bind: interfaces.Bind) => {
     CategoriesRepository
   )
   bind<ICategoriesService>(TYPES.CategoriesService).to(CategoriesService)
+
+  bind<IAuthController>(TYPES.AuthController).to(AuthController)
+  bind<IAuthRepository>(TYPES.AuthRepository).to(AuthRepository)
+  bind<IAuthService>(TYPES.AuthService).to(AuthService)
 })
 
 const container = new Container()
