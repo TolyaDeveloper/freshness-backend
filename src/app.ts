@@ -7,8 +7,10 @@ import { ILoggerService } from './logger/logger.service.interface'
 import { IConfigService } from './config/config.service.interface'
 import { IExceptionFilter } from './exceptions/exception.filter.interface'
 import { ICategoriesController } from './modules/categories/interfaces/categories.controller.interface'
-import helmet from 'helmet'
 import { IAuthController } from './modules/auth/interfaces/auth.controller.interface'
+import cors from 'cors'
+import helmet from 'helmet'
+import cookieParser from 'cookie-parser'
 
 @injectable()
 class App {
@@ -30,6 +32,10 @@ class App {
   }
 
   private useMiddlewares(): void {
+    this.app.use(
+      cors({ origin: this.configService.get('CLIENT_URI'), credentials: true })
+    )
+    this.app.use(cookieParser())
     this.app.use(helmet())
     this.app.use(express.json())
     this.app.use(express.static('public'))
