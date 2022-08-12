@@ -1,9 +1,13 @@
-import { IsString, IsEmail, MinLength } from 'class-validator'
+import { IsString, IsEmail, MinLength, IsNotEmpty } from 'class-validator'
 
 class SignupDto {
-  @MinLength(2)
+  @IsNotEmpty()
   @IsString()
-  public name: string
+  public firstName: string
+
+  @IsNotEmpty()
+  @IsString()
+  public lastName: string
 
   @IsEmail()
   public email: string

@@ -8,6 +8,7 @@ import { IConfigService } from './config/config.service.interface'
 import { IExceptionFilter } from './exceptions/exception.filter.interface'
 import { ICategoriesController } from './modules/categories/interfaces/categories.controller.interface'
 import helmet from 'helmet'
+import { IAuthController } from './modules/auth/interfaces/auth.controller.interface'
 
 @injectable()
 class App {
@@ -21,7 +22,8 @@ class App {
     @inject(TYPES.ConfigService) private configService: IConfigService,
     @inject(TYPES.ExceptionFilter) private exceptionFilter: IExceptionFilter,
     @inject(TYPES.CategoriesController)
-    private categoriesController: ICategoriesController
+    private categoriesController: ICategoriesController,
+    @inject(TYPES.AuthController) private authController: IAuthController
   ) {
     this.port = Number(this.configService.get('PORT'))
     this.app = express()
@@ -30,10 +32,12 @@ class App {
   private useMiddlewares(): void {
     this.app.use(helmet())
     this.app.use(express.json())
+    this.app.use(express.static('public'))
   }
 
   private useControllers(): void {
     this.app.use(this.categoriesController.router)
+    this.app.use(this.authController.router)
   }
 
   private useExceptionFilters(): void {
