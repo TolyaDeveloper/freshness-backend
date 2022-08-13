@@ -9,7 +9,9 @@ const TYPES = {
   AuthService: Symbol.for('AuthService'),
   CategoriesController: Symbol.for('CategoriesController'),
   CategoriesRepository: Symbol.for('CategoriesRepository'),
-  CategoriesService: Symbol.for('CategoriesService')
+  CategoriesService: Symbol.for('CategoriesService'),
+  TokenService: Symbol.for('TokenService'),
+  TokenRepository: Symbol.for('TokenRepository')
 }
 
 export { TYPES }

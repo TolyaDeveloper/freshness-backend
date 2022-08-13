@@ -2,12 +2,12 @@ import mongoose from 'mongoose'
 
 interface ITokenModel {
   refreshToken: string
-  user: typeof mongoose.Schema.Types.ObjectId
+  userId: typeof mongoose.Schema.Types.ObjectId
 }
 
 const tokenSchema = new mongoose.Schema<ITokenModel>({
   refreshToken: { type: String, required: true },
-  user: {
+  userId: {
     ref: 'User',
     type: mongoose.Schema.Types.ObjectId
   }

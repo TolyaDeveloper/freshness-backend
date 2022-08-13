@@ -9,10 +9,12 @@ import { TYPES } from '../../types'
 import { IAuthService } from './interfaces/auth.service.interface'
 import { HttpError } from '../../exceptions/http-error.class'
 import { ValidateMiddleware } from '../../common/validate.middleware'
+import { ITokenService } from '../../services/token/interfaces/token.service.interface'
 
 @injectable()
 class AuthController extends BaseController implements IAuthController {
   @inject(TYPES.AuthService) private authService: IAuthService
+  @inject(TYPES.TokenService) private tokenService: ITokenService
 
   constructor(logger: ILoggerService) {
     super(logger)
@@ -44,10 +46,8 @@ class AuthController extends BaseController implements IAuthController {
       res.end()
     } catch (err) {
       if (err instanceof Error) {
-        return next(new HttpError(422, err.message))
+        return next(new HttpError(409, err.message))
       }
-
-      next(new HttpError(422, 'Unexpected error occured! Try again!'))
     }
   }
 
@@ -55,7 +55,17 @@ class AuthController extends BaseController implements IAuthController {
     req: Request<{}, {}, LoginDto>,
     res: Response,
     next: NextFunction
-  ): Promise<void> {}
+  ): Promise<void> {
+    try {
+      const result = await this.authService.login(req.body)
+
+      res.json(result)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(401, err.message))
+      }
+    }
+  }
 }
 
 export { AuthController }

@@ -1,8 +1,12 @@
+import { config } from 'dotenv'
 import mongoose from 'mongoose'
+
+config()
 
 const defaultAvatarUri = `${process.env.SERVER_URI}/images/default-avatar-96.png`
 
 interface IUserModel {
+  _id: string
   firstName: string
   lastName: string
   email: string
