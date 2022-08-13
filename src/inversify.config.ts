@@ -24,6 +24,7 @@ import { ICategoriesService } from './modules/categories/interfaces/categories.s
 import { TokenService } from './services/token/token.service'
 import { ITokenService } from './services/token/interfaces/token.service.interface'
 import { TokenRepository } from './services/token/token.repository'
+import { ITokenRepository } from './services/token/interfaces/token.repository.interface'
 
 const bindings = new ContainerModule((bind: interfaces.Bind) => {
   bind<App>(TYPES.App).to(App)
@@ -43,6 +44,7 @@ const bindings = new ContainerModule((bind: interfaces.Bind) => {
   bind<IAuthRepository>(TYPES.AuthRepository).to(AuthRepository)
   bind<IAuthService>(TYPES.AuthService).to(AuthService)
   bind<ITokenService>(TYPES.TokenService).to(TokenService)
+  bind<ITokenRepository>(TYPES.TokenRepository).to(TokenRepository)
 })
 
 const container = new Container()

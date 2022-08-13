@@ -5,11 +5,11 @@ import { CategoryDto } from './dto/category.dto'
 
 @injectable()
 class CategoriesRepository implements ICategoriesRepository {
-  public async find(): Promise<ICategoryModel> {
+  public async find() {
     return categoryModel.find().lean()
   }
 
-  public async add(categories: CategoryDto[]): Promise<ICategoryModel[]> {
+  public async add(categories: CategoryDto[]) {
     return categoryModel.insertMany(categories)
   }
 }

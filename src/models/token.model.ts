@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 interface ITokenModel {
   refreshToken: string
-  userId: typeof mongoose.Schema.Types.ObjectId
+  userId: mongoose.Schema.Types.ObjectId
 }
 
 const tokenSchema = new mongoose.Schema<ITokenModel>({

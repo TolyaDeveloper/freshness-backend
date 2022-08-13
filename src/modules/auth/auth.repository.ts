@@ -5,11 +5,11 @@ import { IAuthRepository } from './interfaces/auth.repository.interface'
 
 @injectable()
 class AuthRepository implements IAuthRepository {
-  public async findByEmail(email: string): Promise<IUserModel> {
+  public async findByEmail(email: string) {
     return userModel.findOne({ email }).lean()
   }
 
-  public async createUser(credentials: SignupDto): Promise<IUserModel> {
+  public async createUser(credentials: SignupDto) {
     return userModel.create(credentials)
   }
 }

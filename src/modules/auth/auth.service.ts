@@ -4,15 +4,17 @@ import { SignupDto } from './dto/signup.dto'
 import { IAuthRepository } from './interfaces/auth.repository.interface'
 import { hash, compare } from 'bcryptjs'
 import { IConfigService } from '../../config/config.service.interface'
-import { IAuthService, ITokens } from './interfaces/auth.service.interface'
+import { IAuthService } from './interfaces/auth.service.interface'
 import { LoginDto } from './dto/login.dto'
 import { ITokenService } from '../../services/token/interfaces/token.service.interface'
 import mongoose from 'mongoose'
+import { AuthRepository } from './auth.repository'
+import { ITokens } from '../../interfaces/token.interface'
 
 @injectable()
 class AuthService implements IAuthService {
   constructor(
-    @inject(TYPES.AuthRepository) private authRepository: IAuthRepository,
+    @inject(TYPES.AuthRepository) private authRepository: AuthRepository,
     @inject(TYPES.ConfigService) private configService: IConfigService,
     @inject(TYPES.TokenService) private tokenService: ITokenService
   ) {}
@@ -55,21 +57,14 @@ class AuthService implements IAuthService {
       throw new Error(`Password is not correct!`)
     }
 
-    // ? refactor
-    const accessToken = await this.tokenService.signAccessToken({
+    const tokens = this.tokenService.generateAccessAndRefreshTokens({
       _id: user._id,
       isActivated: user.isActivated
     })
 
-    // ? refactor
-    const refreshToken = await this.tokenService.signRefreshToken({
-      _id: user._id,
-      isActivated: user.isActivated
-    })
+    await this.tokenService.saveRefreshToken(tokens.refreshToken, user._id)
 
-    await this.tokenService.saveRefreshToken(refreshToken, user._id) // ? refactor
-
-    return { accessToken, refreshToken }
+    return tokens
   }
 }
 

@@ -1,11 +1,11 @@
 import { inject, injectable } from 'inversify'
-import { sign, verify } from 'jsonwebtoken'
-import { IConfigService } from '../../config/config.service.interface'
+import { Algorithm, sign, verify } from 'jsonwebtoken'
 import { TYPES } from '../../types'
 import { ITokenService } from './interfaces/token.service.interface'
-import { ITokenPayload } from '../../interfaces/token.payload.interface'
-import mongoose from 'mongoose'
 import { ITokenRepository } from './interfaces/token.repository.interface'
+import { ITokenPayload, ITokens } from '../../interfaces/token.interface'
+import { IConfigService } from '../../config/config.service.interface'
+import mongoose from 'mongoose'
 
 @injectable()
 class TokenService implements ITokenService {
@@ -14,42 +14,26 @@ class TokenService implements ITokenService {
     @inject(TYPES.TokenRepository) private tokenRepository: ITokenRepository
   ) {}
 
-  public signAccessToken(payload: ITokenPayload): Promise<string> {
-    return new Promise((resolve, reject) => {
-      sign(
-        payload,
-        this.configService.get('JWT_ACCESS_SECRET'),
-        {
-          expiresIn: this.configService.get('JWT_ACCESS_EXPIRES_IN')
-        },
-        (err, token) => {
-          if (err) {
-            reject(err.message)
-          }
+  public generateAccessAndRefreshTokens(payload: ITokenPayload): ITokens {
+    const accessToken = sign(
+      payload,
+      this.configService.get('JWT_ACCESS_SECRET'),
+      {
+        expiresIn: this.configService.get('JWT_ACCESS_EXPIRES_IN'),
+        algorithm: this.configService.get('JWT_ACCESS_ALGORITHM') as Algorithm
+      }
+    )
 
-          resolve(token as string)
-        }
-      )
-    })
-  }
+    const refreshToken = sign(
+      payload,
+      this.configService.get('JWT_REFRESH_SECRET'),
+      {
+        expiresIn: this.configService.get('JWT_REFRESH_EXPIRES_IN'),
+        algorithm: this.configService.get('JWT_REFRESH_ALGORITHM') as Algorithm
+      }
+    )
 
-  public signRefreshToken(payload: ITokenPayload): Promise<string> {
-    return new Promise((resolve, reject) => {
-      sign(
-        payload,
-        this.configService.get('JWT_REFRESH_SECRET'),
-        {
-          expiresIn: this.configService.get('JWT_REFRESH_EXPIRES_IN')
-        },
-        (err, token) => {
-          if (err) {
-            reject(err.message)
-          }
-
-          resolve(token as string)
-        }
-      )
-    })
+    return { accessToken, refreshToken }
   }
 
   public validateAccessToken(accessToken: string): Promise<ITokenPayload> {
@@ -57,12 +41,12 @@ class TokenService implements ITokenService {
       verify(
         accessToken,
         this.configService.get('JWT_ACCESS_SECRET'),
-        (err, decoded) => {
+        (err, decodedData) => {
           if (err) {
-            reject(err)
+            return reject(err)
           }
 
-          resolve(decoded as ITokenPayload)
+          resolve(decodedData as ITokenPayload)
         }
       )
     })
@@ -73,12 +57,12 @@ class TokenService implements ITokenService {
       verify(
         refreshToken,
         this.configService.get('JWT_REFRESH_SECRET'),
-        (err, decoded) => {
+        (err, decodedData) => {
           if (err) {
-            reject(err)
+            return reject(err)
           }
 
-          resolve(decoded as ITokenPayload)
+          resolve(decodedData as ITokenPayload)
         }
       )
     })
@@ -86,7 +70,7 @@ class TokenService implements ITokenService {
 
   public async saveRefreshToken(
     refreshToken: string,
-    userId: typeof mongoose.Schema.Types.ObjectId
+    userId: mongoose.Schema.Types.ObjectId
   ): Promise<string> {
     const result = await this.tokenRepository.saveRefreshToken(
       refreshToken,

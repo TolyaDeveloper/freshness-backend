@@ -7,8 +7,8 @@ import mongoose from 'mongoose'
 class TokenRepository implements ITokenRepository {
   public async saveRefreshToken(
     refreshToken: string,
-    userId: typeof mongoose.Schema.Types.ObjectId
-  ): Promise<ITokenModel> {
+    userId: mongoose.Schema.Types.ObjectId
+  ) {
     return tokenModel.create({ refreshToken, userId })
   }
 }
