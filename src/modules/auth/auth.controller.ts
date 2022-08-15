@@ -10,11 +10,13 @@ import { IAuthService } from './interfaces/auth.service.interface'
 import { HttpError } from '../../exceptions/http-error.class'
 import { ValidateMiddleware } from '../../common/validate.middleware'
 import { ITokenService } from '../../services/token/interfaces/token.service.interface'
+import { IConfigService } from '../../config/config.service.interface'
 
 @injectable()
 class AuthController extends BaseController implements IAuthController {
   @inject(TYPES.AuthService) private authService: IAuthService
   @inject(TYPES.TokenService) private tokenService: ITokenService
+  @inject(TYPES.ConfigService) private configService: IConfigService
 
   constructor(logger: ILoggerService) {
     super(logger)
@@ -41,9 +43,13 @@ class AuthController extends BaseController implements IAuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      await this.authService.signup(req.body)
+      const result = await this.authService.signup(req.body)
 
-      res.end()
+      res.cookie('refreshToken', result.refreshToken, {
+        httpOnly: true,
+        maxAge: Number(this.configService.get('COOKIES_JWT_REFRESH_EXPIRES_IN'))
+      })
+      res.json({ accessToken: result.accessToken })
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(409, err.message))
@@ -59,7 +65,11 @@ class AuthController extends BaseController implements IAuthController {
     try {
       const result = await this.authService.login(req.body)
 
-      res.json(result)
+      res.cookie('refreshToken', result.refreshToken, {
+        httpOnly: true,
+        maxAge: Number(this.configService.get('COOKIES_JWT_REFRESH_EXPIRES_IN'))
+      })
+      res.json({ accessToken: result.accessToken })
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(401, err.message))

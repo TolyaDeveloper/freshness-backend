@@ -1,20 +1,19 @@
 import { injectable, inject } from 'inversify'
 import { TYPES } from '../../types'
 import { SignupDto } from './dto/signup.dto'
-import { IAuthRepository } from './interfaces/auth.repository.interface'
 import { hash, compare } from 'bcryptjs'
 import { IConfigService } from '../../config/config.service.interface'
 import { IAuthService } from './interfaces/auth.service.interface'
 import { LoginDto } from './dto/login.dto'
 import { ITokenService } from '../../services/token/interfaces/token.service.interface'
-import mongoose from 'mongoose'
-import { AuthRepository } from './auth.repository'
+import { IAuthRepository } from './interfaces/auth.repository.interface'
 import { ITokens } from '../../interfaces/token.interface'
+import mongoose from 'mongoose'
 
 @injectable()
 class AuthService implements IAuthService {
   constructor(
-    @inject(TYPES.AuthRepository) private authRepository: AuthRepository,
+    @inject(TYPES.AuthRepository) private authRepository: IAuthRepository,
     @inject(TYPES.ConfigService) private configService: IConfigService,
     @inject(TYPES.TokenService) private tokenService: ITokenService
   ) {}
@@ -24,7 +23,7 @@ class AuthService implements IAuthService {
     lastName,
     email,
     password
-  }: SignupDto): Promise<void> {
+  }: SignupDto): Promise<ITokens> {
     const candidate = await this.authRepository.findByEmail(email)
 
     if (candidate) {
@@ -36,12 +35,21 @@ class AuthService implements IAuthService {
       Number(this.configService.get('SALT'))
     )
 
-    await this.authRepository.createUser({
+    const newUser = await this.authRepository.createUser({
       firstName,
       lastName,
       email,
       password: hashedPassword
     })
+
+    const tokens = this.tokenService.generateAccessAndRefreshTokens({
+      _id: newUser._id,
+      isActivated: newUser.isActivated
+    })
+
+    await this.tokenService.saveRefreshToken(tokens.refreshToken, newUser._id)
+
+    return tokens
   }
 
   public async login({ email, password }: LoginDto): Promise<ITokens> {

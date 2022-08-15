@@ -1,15 +1,14 @@
 import mongoose from 'mongoose'
 
-interface ITagModel {
-  name: string
-  slug: string
-}
-
-const tagSchema = new mongoose.Schema<ITagModel>({
-  name: { type: String },
-  slug: { type: String }
+const tagSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  slug: { type: String, required: true }
 })
 
-const tagModel = mongoose.model<ITagModel>('Tag', tagSchema)
+const tagModel = mongoose.model('Tag', tagSchema)
 
-export { tagModel, ITagModel }
+type TagModelType = mongoose.InferSchemaType<typeof tagSchema> & {
+  _id: mongoose.Types.ObjectId
+}
+
+export { tagModel, TagModelType }

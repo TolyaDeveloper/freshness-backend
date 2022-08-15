@@ -16,4 +16,8 @@ const postSchema = new mongoose.Schema({
 
 const postModel = mongoose.model('Post', postSchema)
 
-export default postModel
+type PostModelType = mongoose.InferSchemaType<typeof postSchema> & {
+  _id: mongoose.Types.ObjectId
+}
+
+export { postModel, PostModelType }

@@ -1,12 +1,16 @@
-import mongoose from 'mongoose'
+import { GetPublicKeyOrSecret, Secret } from 'jsonwebtoken'
 import { ITokenPayload, ITokens } from '../../../interfaces/token.interface'
+import { type TokenModelType } from '../../../models/token.model'
+import mongoose from 'mongoose'
 
 export interface ITokenService {
   generateAccessAndRefreshTokens: (payload: ITokenPayload) => ITokens
-  validateAccessToken: (accessToken: string) => Promise<ITokenPayload>
-  validateRefreshToken: (refreshToken: string) => Promise<ITokenPayload>
+  validateToken: (
+    token: string,
+    secret: Secret | GetPublicKeyOrSecret
+  ) => Promise<ITokenPayload>
   saveRefreshToken: (
     refreshToken: string,
-    userId: mongoose.Schema.Types.ObjectId
-  ) => Promise<string>
+    userId: mongoose.Types.ObjectId
+  ) => Promise<TokenModelType>
 }

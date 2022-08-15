@@ -1,6 +1,7 @@
-import { ICategoryModel } from '../../../models/category.model'
+import { type CategoryModelType } from '../../../models/category.model'
+import { CategoryDto } from '../dto/category.dto'
 
 export interface ICategoriesRepository {
-  find: () => Promise<ICategoryModel>
-  add: (categories: ICategoryModel[]) => Promise<ICategoryModel[]>
+  find: () => Promise<CategoryModelType[]>
+  add: (categories: CategoryDto[]) => Promise<CategoryModelType[]>
 }

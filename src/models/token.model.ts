@@ -1,11 +1,6 @@
 import mongoose from 'mongoose'
 
-interface ITokenModel {
-  refreshToken: string
-  userId: mongoose.Schema.Types.ObjectId
-}
-
-const tokenSchema = new mongoose.Schema<ITokenModel>({
+const tokenSchema = new mongoose.Schema({
   refreshToken: { type: String, required: true },
   userId: {
     ref: 'User',
@@ -13,6 +8,10 @@ const tokenSchema = new mongoose.Schema<ITokenModel>({
   }
 })
 
-const tokenModel = mongoose.model<ITokenModel>('Token', tokenSchema)
+const tokenModel = mongoose.model('Token', tokenSchema)
 
-export { tokenModel, ITokenModel }
+type TokenModelType = mongoose.InferSchemaType<typeof tokenSchema> & {
+  _id: mongoose.Types.ObjectId
+}
+
+export { tokenModel, TokenModelType }

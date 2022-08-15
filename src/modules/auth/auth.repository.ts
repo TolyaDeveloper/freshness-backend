@@ -1,5 +1,5 @@
 import { injectable } from 'inversify'
-import { userModel, IUserModel } from '../../models/user.model'
+import { userModel } from '../../models/user.model'
 import { SignupDto } from './dto/signup.dto'
 import { IAuthRepository } from './interfaces/auth.repository.interface'
 

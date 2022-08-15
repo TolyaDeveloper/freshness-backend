@@ -6,6 +6,6 @@ export interface ITokens {
 }
 
 export interface ITokenPayload {
-  _id: mongoose.Schema.Types.ObjectId
+  _id: mongoose.Types.ObjectId
   isActivated: boolean
 }

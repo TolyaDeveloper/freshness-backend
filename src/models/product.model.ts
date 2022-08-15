@@ -35,4 +35,8 @@ const productSchema = new mongoose.Schema({
 
 const productModel = mongoose.model('Product', productSchema)
 
-export default productModel
+type ProductModelType = mongoose.InferSchemaType<typeof productSchema> & {
+  _id: mongoose.Types.ObjectId
+}
+
+export { productModel, ProductModelType }

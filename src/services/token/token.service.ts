@@ -1,10 +1,17 @@
 import { inject, injectable } from 'inversify'
-import { Algorithm, sign, verify } from 'jsonwebtoken'
+import {
+  Algorithm,
+  GetPublicKeyOrSecret,
+  Secret,
+  sign,
+  verify
+} from 'jsonwebtoken'
 import { TYPES } from '../../types'
+import { IConfigService } from '../../config/config.service.interface'
 import { ITokenService } from './interfaces/token.service.interface'
 import { ITokenRepository } from './interfaces/token.repository.interface'
 import { ITokenPayload, ITokens } from '../../interfaces/token.interface'
-import { IConfigService } from '../../config/config.service.interface'
+import { type TokenModelType } from '../../models/token.model'
 import mongoose from 'mongoose'
 
 @injectable()
@@ -36,48 +43,31 @@ class TokenService implements ITokenService {
     return { accessToken, refreshToken }
   }
 
-  public validateAccessToken(accessToken: string): Promise<ITokenPayload> {
+  public validateToken(
+    token: string,
+    secret: Secret | GetPublicKeyOrSecret
+  ): Promise<ITokenPayload> {
     return new Promise((resolve, reject) => {
-      verify(
-        accessToken,
-        this.configService.get('JWT_ACCESS_SECRET'),
-        (err, decodedData) => {
-          if (err) {
-            return reject(err)
-          }
-
-          resolve(decodedData as ITokenPayload)
+      verify(token, secret, (err, decodedData) => {
+        if (err) {
+          return reject(err)
         }
-      )
-    })
-  }
 
-  public validateRefreshToken(refreshToken: string): Promise<ITokenPayload> {
-    return new Promise((resolve, reject) => {
-      verify(
-        refreshToken,
-        this.configService.get('JWT_REFRESH_SECRET'),
-        (err, decodedData) => {
-          if (err) {
-            return reject(err)
-          }
-
-          resolve(decodedData as ITokenPayload)
-        }
-      )
+        resolve(decodedData as ITokenPayload)
+      })
     })
   }
 
   public async saveRefreshToken(
     refreshToken: string,
-    userId: mongoose.Schema.Types.ObjectId
-  ): Promise<string> {
+    userId: mongoose.Types.ObjectId
+  ): Promise<TokenModelType> {
     const result = await this.tokenRepository.saveRefreshToken(
       refreshToken,
       userId
     )
 
-    return result.refreshToken
+    return result
   }
 }
 

@@ -1,24 +1,11 @@
 import { config } from 'dotenv'
-import mongoose, { Document } from 'mongoose'
+import mongoose from 'mongoose'
 
 config()
 
 const defaultAvatarUri = `${process.env.SERVER_URI}/images/default-avatar-96.png`
 
-interface IUserModel {
-  firstName: string
-  lastName: string
-  email: string
-  password: string
-  isActivated: boolean
-  avatarUri: string
-  wishlist: Array<unknown>
-  ordersHistory: Array<unknown>
-  cart: Array<unknown>
-  compare: Array<unknown>
-}
-
-const userSchema = new mongoose.Schema<IUserModel>({
+const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -55,6 +42,10 @@ const userSchema = new mongoose.Schema<IUserModel>({
   ]
 })
 
-const userModel = mongoose.model<IUserModel>('User', userSchema)
+const userModel = mongoose.model('User', userSchema)
 
-export { userModel, IUserModel }
+type UserModelType = mongoose.InferSchemaType<typeof userSchema> & {
+  _id: mongoose.Types.ObjectId
+}
+
+export { userModel, UserModelType }

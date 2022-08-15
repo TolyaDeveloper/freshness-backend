@@ -1,5 +1,5 @@
 import { injectable } from 'inversify'
-import { ITokenModel, tokenModel } from '../../models/token.model'
+import { tokenModel } from '../../models/token.model'
 import { ITokenRepository } from './interfaces/token.repository.interface'
 import mongoose from 'mongoose'
 
@@ -7,7 +7,7 @@ import mongoose from 'mongoose'
 class TokenRepository implements ITokenRepository {
   public async saveRefreshToken(
     refreshToken: string,
-    userId: mongoose.Schema.Types.ObjectId
+    userId: mongoose.Types.ObjectId
   ) {
     return tokenModel.create({ refreshToken, userId })
   }
