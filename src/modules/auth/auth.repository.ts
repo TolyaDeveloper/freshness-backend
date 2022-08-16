@@ -12,6 +12,10 @@ class AuthRepository implements IAuthRepository {
   public async createUser(credentials: SignupDto) {
     return userModel.create(credentials)
   }
+
+  public async findUserByActivationLink(activationLink: string) {
+    return userModel.findOne({ activationLink })
+  }
 }
 
 export { AuthRepository }

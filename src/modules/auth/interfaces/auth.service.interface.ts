@@ -5,4 +5,6 @@ import { ITokens } from '../../../interfaces/token.interface'
 export interface IAuthService {
   signup: (credentials: SignupDto) => Promise<ITokens>
   login: (credentials: LoginDto) => Promise<ITokens>
+  activate: (link: string) => Promise<void>
+  logout: (refreshToken: string) => Promise<void>
 }

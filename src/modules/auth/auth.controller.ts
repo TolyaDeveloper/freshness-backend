@@ -15,7 +15,6 @@ import { IConfigService } from '../../config/config.service.interface'
 @injectable()
 class AuthController extends BaseController implements IAuthController {
   @inject(TYPES.AuthService) private authService: IAuthService
-  @inject(TYPES.TokenService) private tokenService: ITokenService
   @inject(TYPES.ConfigService) private configService: IConfigService
 
   constructor(logger: ILoggerService) {
@@ -33,7 +32,9 @@ class AuthController extends BaseController implements IAuthController {
         path: '/auth/login',
         func: this.login,
         middlewares: [new ValidateMiddleware(LoginDto)]
-      }
+      },
+      { method: 'get', path: '/auth/activate/:link', func: this.activate },
+      { method: 'post', path: '/auth/logout', func: this.logout }
     ])
   }
 
@@ -70,6 +71,41 @@ class AuthController extends BaseController implements IAuthController {
         maxAge: Number(this.configService.get('COOKIES_JWT_REFRESH_EXPIRES_IN'))
       })
       res.json({ accessToken: result.accessToken })
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(401, err.message))
+      }
+    }
+  }
+
+  public async activate(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      await this.authService.activate(req.params.link)
+
+      res.send('Account activated successfully!')
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(409, err.message))
+      }
+    }
+  }
+
+  public async logout(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { refreshToken } = req.cookies
+
+      await this.authService.logout(refreshToken)
+
+      res.clearCookie('refreshToken')
+      res.end()
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(401, err.message))

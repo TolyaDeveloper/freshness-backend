@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 
 config()
 
-const defaultAvatarUri = `${process.env.SERVER_URI}/images/default-avatar-96.png`
+const defaultAvatarUri = `${process.env.IMAGES_URI}/images/default-avatar-96.png`
 
 const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, min: 8 },
   isActivated: { type: Boolean, default: false },
+  activationLink: { type: String },
   avatarUri: { type: String, default: defaultAvatarUri },
   wishlist: [
     {

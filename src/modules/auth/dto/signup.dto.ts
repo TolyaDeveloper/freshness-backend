@@ -15,6 +15,8 @@ class SignupDto {
   @MinLength(8)
   @IsString()
   public password: string
+
+  public activationLink: string
 }
 
 export { SignupDto }

@@ -62,12 +62,28 @@ class TokenService implements ITokenService {
     refreshToken: string,
     userId: mongoose.Types.ObjectId
   ): Promise<TokenModelType> {
-    const result = await this.tokenRepository.saveRefreshToken(
+    const result = await this.tokenRepository.findRefreshTokenByUserId(userId)
+
+    if (result) {
+      result.refreshToken = refreshToken
+
+      return await result.save()
+    }
+
+    const token = await this.tokenRepository.saveRefreshToken(
       refreshToken,
       userId
     )
 
-    return result
+    return token
+  }
+
+  public async removeRefreshToken(refreshToken: string) {
+    const result = await this.tokenRepository.removeRefreshToken(refreshToken)
+
+    if (!result) {
+      throw new Error('Such session does not exist!')
+    }
   }
 }
 

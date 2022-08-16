@@ -11,6 +11,14 @@ class TokenRepository implements ITokenRepository {
   ) {
     return tokenModel.create({ refreshToken, userId })
   }
+
+  public async removeRefreshToken(refreshToken: string) {
+    return tokenModel.findOneAndDelete({ refreshToken })
+  }
+
+  public async findRefreshTokenByUserId(userId: mongoose.Types.ObjectId) {
+    return tokenModel.findOne({ userId })
+  }
 }
 
 export { TokenRepository }

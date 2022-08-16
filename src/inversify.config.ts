@@ -25,6 +25,8 @@ import { TokenService } from './services/token/token.service'
 import { ITokenService } from './services/token/interfaces/token.service.interface'
 import { TokenRepository } from './services/token/token.repository'
 import { ITokenRepository } from './services/token/interfaces/token.repository.interface'
+import { MailService } from './services/mail/mail.service'
+import { IMailService } from './services/mail/interfaces/mail.service.inerface'
 
 const bindings = new ContainerModule((bind: interfaces.Bind) => {
   bind<App>(TYPES.App).to(App)
@@ -45,6 +47,7 @@ const bindings = new ContainerModule((bind: interfaces.Bind) => {
   bind<IAuthService>(TYPES.AuthService).to(AuthService)
   bind<ITokenService>(TYPES.TokenService).to(TokenService)
   bind<ITokenRepository>(TYPES.TokenRepository).to(TokenRepository)
+  bind<IMailService>(TYPES.MailService).to(MailService)
 })
 
 const container = new Container()
