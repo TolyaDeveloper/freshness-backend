@@ -10,8 +10,7 @@ import { ITokenService } from '../../services/token/interfaces/token.service.int
 import { IAuthRepository } from './interfaces/auth.repository.interface'
 import { ITokens } from '../../interfaces/token.interface'
 import { IMailService } from '../../services/mail/interfaces/mail.service.inerface'
-import { userModel, UserModelType } from '../../models/user.model'
-import mongoose from 'mongoose'
+import { UserModelType } from '../../models/user.model'
 
 @injectable()
 class AuthService implements IAuthService {

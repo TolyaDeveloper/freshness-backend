@@ -6,8 +6,8 @@ import { HttpError } from '../exceptions/http-error.class'
 
 class ValidateMiddleware implements IMiddleware {
   constructor(
-    public classToValidate: ClassConstructor<object>,
-    public options?: ValidatorOptions
+    private classToValidate: ClassConstructor<object>,
+    private options?: ValidatorOptions
   ) {}
 
   execute({ body }: Request, res: Response, next: NextFunction): void {

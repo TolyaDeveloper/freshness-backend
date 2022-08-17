@@ -1,9 +1,8 @@
 import mongoose from 'mongoose'
 
 const postSchema = new mongoose.Schema({
+  createdBy: { ref: 'User', type: mongoose.Schema.Types.ObjectId },
   createdAt: { type: Date, default: Date.now },
-  authorAvatarUri: { type: String },
-  authorName: { type: String },
   title: { type: String },
   postImageUri: { type: String },
   tags: [

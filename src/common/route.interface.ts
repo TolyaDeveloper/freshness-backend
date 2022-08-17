@@ -7,5 +7,3 @@ export interface IRoute {
   method: keyof Pick<Router, 'get' | 'post' | 'delete' | 'patch' | 'put'>
   middlewares?: IMiddleware[]
 }
-
-export type ExpressReturnType = Response<any, Record<string, any>>
