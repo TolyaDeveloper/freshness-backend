@@ -45,8 +45,10 @@ const bindings = new ContainerModule((bind: interfaces.Bind) => {
   bind<IAuthController>(TYPES.AuthController).to(AuthController)
   bind<IAuthRepository>(TYPES.AuthRepository).to(AuthRepository)
   bind<IAuthService>(TYPES.AuthService).to(AuthService)
-  bind<ITokenService>(TYPES.TokenService).to(TokenService)
-  bind<ITokenRepository>(TYPES.TokenRepository).to(TokenRepository)
+  bind<ITokenService>(TYPES.TokenService).to(TokenService).inSingletonScope()
+  bind<ITokenRepository>(TYPES.TokenRepository)
+    .to(TokenRepository)
+    .inSingletonScope()
   bind<IMailService>(TYPES.MailService).to(MailService)
 })
 

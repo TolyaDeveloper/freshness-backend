@@ -1,18 +1,16 @@
 import { NextFunction, Request, Response } from 'express'
-import { inject } from 'inversify'
 import { IConfigService } from '../config/config.service.interface'
 import { HttpError } from '../exceptions/http-error.class'
 import { ITokenService } from '../services/token/interfaces/token.service.interface'
 import { TYPES } from '../types'
 import { IMiddleware } from './middleware.interface'
+import { container } from '../inversify.config'
 
 class AuthMiddleware implements IMiddleware {
-  constructor(
-    @inject(TYPES.TokenService) private tokenService: ITokenService,
-    @inject(TYPES.ConfigService) private configService: IConfigService
-  ) {}
+  private configService = container.get<IConfigService>(TYPES.ConfigService)
+  private tokenService = container.get<ITokenService>(TYPES.TokenService)
 
-  public execute(req: Request, res: Response, next: NextFunction) {
+  public async execute(req: Request, res: Response, next: NextFunction) {
     try {
       const authorizationHeader = req.headers.authorization
 
@@ -26,17 +24,14 @@ class AuthMiddleware implements IMiddleware {
         throw new Error('Not authorized')
       }
 
-      this.tokenService
-        .validateToken(accessToken, this.configService.get('JWT_ACCESS_SECRET'))
-        .then(dataFromToken => {
-          if (!dataFromToken) {
-            throw new Error('Not authorized')
-          }
+      const dataFromToken = await this.tokenService.validateToken(
+        accessToken,
+        this.configService.get('JWT_ACCESS_SECRET')
+      )
 
-          // !todo req.user = dataFromToken
+      req.user = dataFromToken
 
-          next()
-        })
+      next()
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(401, err.message))

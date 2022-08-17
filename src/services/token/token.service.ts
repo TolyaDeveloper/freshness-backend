@@ -50,7 +50,7 @@ class TokenService implements ITokenService {
     return new Promise((resolve, reject) => {
       verify(token, secret, (err, decodedData) => {
         if (err) {
-          return reject(err)
+          reject(err)
         }
 
         resolve(decodedData as ITokenPayload)

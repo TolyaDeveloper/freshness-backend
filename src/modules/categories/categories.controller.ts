@@ -1,13 +1,14 @@
-import { ICategoriesController } from './interfaces/categories.controller.interface'
-import { BaseController } from '../../common/base.controller'
 import { NextFunction, Request, Response } from 'express'
 import { inject, injectable } from 'inversify'
+import { ICategoriesController } from './interfaces/categories.controller.interface'
+import { BaseController } from '../../common/base.controller'
 import { TYPES } from '../../types'
 import { ICategoriesService } from './interfaces/categories.service.interface'
 import { HttpError } from '../../exceptions/http-error.class'
 import { ILoggerService } from '../../logger/logger.service.interface'
 import { CategoryDto } from './dto/category.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
+import { AuthMiddleware } from '../../common/auth.middleware'
 
 @injectable()
 class CategoriesController
@@ -21,7 +22,12 @@ class CategoriesController
     super(logger)
 
     this.bindRoutes([
-      { method: 'get', path: '/categories', func: this.findAllCategories },
+      {
+        method: 'get',
+        path: '/categories',
+        func: this.findAllCategories,
+        middlewares: [new AuthMiddleware()]
+      },
       {
         method: 'post',
         path: '/categories/add',
