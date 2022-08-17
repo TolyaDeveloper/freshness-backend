@@ -25,8 +25,7 @@ class CategoriesController
       {
         method: 'get',
         path: '/categories',
-        func: this.findAllCategories,
-        middlewares: [new AuthMiddleware()]
+        func: this.findAllCategories
       },
       {
         method: 'post',
