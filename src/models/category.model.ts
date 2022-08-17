@@ -1,15 +1,14 @@
 import mongoose from 'mongoose'
 
-interface ICategoryModel {
-  name: string
-  slug: string
-}
-
-const categorySchema = new mongoose.Schema<ICategoryModel>({
-  name: { type: String },
-  slug: { type: String }
+const categorySchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  slug: { type: String, required: true }
 })
 
-const categoryModel = mongoose.model<ICategoryModel>('Category', categorySchema)
+const categoryModel = mongoose.model('Category', categorySchema)
 
-export { ICategoryModel, categoryModel }
+type CategoryModelType = mongoose.InferSchemaType<typeof categorySchema> & {
+  _id: mongoose.Types.ObjectId
+}
+
+export { categoryModel, CategoryModelType }

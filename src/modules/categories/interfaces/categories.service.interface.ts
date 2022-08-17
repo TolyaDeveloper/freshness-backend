@@ -1,6 +1,7 @@
-import { ICategoryModel } from '../../../models/category.model'
+import { CategoryModelType } from '../../../models/category.model'
+import { CategoryDto } from '../dto/category.dto'
 
 export interface ICategoriesService {
-  findAllCategories: () => Promise<ICategoryModel>
-  addCategories: (categories: ICategoryModel[]) => Promise<ICategoryModel[]>
+  findAllCategories: () => Promise<CategoryModelType[]>
+  addCategories: (categories: CategoryDto[]) => Promise<CategoryModelType[]>
 }

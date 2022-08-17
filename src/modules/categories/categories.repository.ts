@@ -1,15 +1,14 @@
 import { injectable } from 'inversify'
-import { ICategoryModel, categoryModel } from '../../models/category.model'
-import { ICategoriesRepository } from './interfaces/categories.repository.interface'
+import { categoryModel } from '../../models/category.model'
 import { CategoryDto } from './dto/category.dto'
 
 @injectable()
-class CategoriesRepository implements ICategoriesRepository {
-  public async find(): Promise<ICategoryModel> {
+class CategoriesRepository {
+  public async find() {
     return categoryModel.find().lean()
   }
 
-  public async add(categories: CategoryDto[]): Promise<ICategoryModel[]> {
+  public async add(categories: CategoryDto[]) {
     return categoryModel.insertMany(categories)
   }
 }

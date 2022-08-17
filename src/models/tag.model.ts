@@ -1,10 +1,14 @@
 import mongoose from 'mongoose'
 
 const tagSchema = new mongoose.Schema({
-  name: { type: String },
-  slug: { type: String }
+  name: { type: String, required: true },
+  slug: { type: String, required: true }
 })
 
 const tagModel = mongoose.model('Tag', tagSchema)
 
-export default tagModel
+type TagModelType = mongoose.InferSchemaType<typeof tagSchema> & {
+  _id: mongoose.Types.ObjectId
+}
+
+export { tagModel, TagModelType }
