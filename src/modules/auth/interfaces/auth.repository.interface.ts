@@ -8,4 +8,5 @@ export interface IAuthRepository {
   findUserByActivationLink: (
     activationLink: string
   ) => Promise<(UserModelType & mongoose.Document) | null>
+  findUserById: (id: mongoose.Types.ObjectId) => Promise<UserModelType | null>
 }

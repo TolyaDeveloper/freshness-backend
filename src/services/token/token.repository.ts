@@ -19,6 +19,10 @@ class TokenRepository implements ITokenRepository {
   public async findRefreshTokenByUserId(userId: mongoose.Types.ObjectId) {
     return tokenModel.findOne({ userId })
   }
+
+  public async findRefreshToken(refreshToken: string) {
+    return tokenModel.findOne({ refreshToken })
+  }
 }
 
 export { TokenRepository }

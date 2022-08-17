@@ -14,4 +14,5 @@ export interface ITokenService {
     userId: mongoose.Types.ObjectId
   ) => Promise<TokenModelType>
   removeRefreshToken: (refreshToken: string) => Promise<void>
+  findRefreshToken: (refreshToken: string) => Promise<TokenModelType | null>
 }

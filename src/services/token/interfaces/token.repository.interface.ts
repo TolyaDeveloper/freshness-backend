@@ -10,4 +10,5 @@ export interface ITokenRepository {
   findRefreshTokenByUserId: (
     id: mongoose.Types.ObjectId
   ) => Promise<(TokenModelType & mongoose.Document) | null>
+  findRefreshToken: (refreshToken: string) => Promise<TokenModelType | null>
 }

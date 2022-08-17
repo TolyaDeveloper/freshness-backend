@@ -9,7 +9,6 @@ import { TYPES } from '../../types'
 import { IAuthService } from './interfaces/auth.service.interface'
 import { HttpError } from '../../exceptions/http-error.class'
 import { ValidateMiddleware } from '../../common/validate.middleware'
-import { ITokenService } from '../../services/token/interfaces/token.service.interface'
 import { IConfigService } from '../../config/config.service.interface'
 
 @injectable()
@@ -33,8 +32,9 @@ class AuthController extends BaseController implements IAuthController {
         func: this.login,
         middlewares: [new ValidateMiddleware(LoginDto)]
       },
+      { method: 'post', path: '/auth/logout', func: this.logout },
       { method: 'get', path: '/auth/activate/:link', func: this.activate },
-      { method: 'post', path: '/auth/logout', func: this.logout }
+      { method: 'get', path: '/auth/refresh', func: this.refresh }
     ])
   }
 
@@ -106,6 +106,30 @@ class AuthController extends BaseController implements IAuthController {
 
       res.clearCookie('refreshToken')
       res.end()
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(401, err.message))
+      }
+    }
+  }
+
+  public async refresh(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { refreshToken } = req.cookies
+      const newTokens = await this.authService.refresh(refreshToken)
+
+      res.cookie('refreshToken', newTokens.refreshToken, {
+        maxAge: Number(
+          this.configService.get('COOKIES_JWT_REFRESH_EXPIRES_IN')
+        ),
+        httpOnly: true
+      })
+
+      res.json({ accessToken: newTokens.accessToken })
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(401, err.message))

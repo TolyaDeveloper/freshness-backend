@@ -10,6 +10,8 @@ import { ITokenService } from '../../services/token/interfaces/token.service.int
 import { IAuthRepository } from './interfaces/auth.repository.interface'
 import { ITokens } from '../../interfaces/token.interface'
 import { IMailService } from '../../services/mail/interfaces/mail.service.inerface'
+import { userModel, UserModelType } from '../../models/user.model'
+import mongoose from 'mongoose'
 
 @injectable()
 class AuthService implements IAuthService {
@@ -98,6 +100,34 @@ class AuthService implements IAuthService {
 
   public async logout(refreshToken: string): Promise<void> {
     await this.tokenService.removeRefreshToken(refreshToken)
+  }
+
+  public async refresh(refreshToken: string) {
+    if (!refreshToken) {
+      throw new Error('Unathorized!')
+    }
+
+    const validatedToken = await this.tokenService.validateToken(
+      refreshToken,
+      this.configService.get('JWT_REFRESH_SECRET')
+    )
+    const tokenFromDb = await this.tokenService.findRefreshToken(refreshToken)
+
+    if (!validatedToken || !tokenFromDb) {
+      throw new Error('Unathorized!')
+    }
+
+    const user = (await this.authRepository.findUserById(
+      validatedToken._id
+    )) as UserModelType
+    const tokens = this.tokenService.generateAccessAndRefreshTokens({
+      _id: user._id,
+      isActivated: user.isActivated
+    })
+
+    await this.tokenService.saveRefreshToken(tokens.refreshToken, user._id)
+
+    return tokens
   }
 }
 

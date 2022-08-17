@@ -85,6 +85,12 @@ class TokenService implements ITokenService {
       throw new Error('Such session does not exist!')
     }
   }
+
+  public async findRefreshToken(refreshToken: string) {
+    const token = await this.tokenRepository.findRefreshToken(refreshToken)
+
+    return token
+  }
 }
 
 export { TokenService }

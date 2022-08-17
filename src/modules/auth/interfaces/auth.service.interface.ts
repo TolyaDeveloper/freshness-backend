@@ -7,4 +7,5 @@ export interface IAuthService {
   login: (credentials: LoginDto) => Promise<ITokens>
   activate: (link: string) => Promise<void>
   logout: (refreshToken: string) => Promise<void>
+  refresh: (refreshToken: string) => Promise<ITokens>
 }
