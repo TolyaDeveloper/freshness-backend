@@ -5,12 +5,19 @@ import { ITokenService } from '../services/token/interfaces/token.service.interf
 import { TYPES } from '../types'
 import { IMiddleware } from './middleware.interface'
 import { container } from '../inversify.config'
+// import { inject } from 'inversify'
+// import { ILoggerService } from '../logger/logger.service.interface'
 
 class AuthMiddleware implements IMiddleware {
+  // ? refactor
   private configService = container.get<IConfigService>(TYPES.ConfigService)
   private tokenService = container.get<ITokenService>(TYPES.TokenService)
 
+  // @inject(TYPES.LoggerService) private logger: ILoggerService
+
   public async execute(req: Request, res: Response, next: NextFunction) {
+    // console.log(this.logger) // ? -> undefined
+
     try {
       const authorizationHeader = req.headers.authorization
 
