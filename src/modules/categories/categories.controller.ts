@@ -31,7 +31,7 @@ class CategoriesController
         method: 'post',
         path: '/categories/add',
         func: this.addCategories,
-        middlewares: [new ValidateMiddleware(CategoryDto)]
+        middlewares: [new AuthMiddleware(), new ValidateMiddleware(CategoryDto)]
       }
     ])
   }

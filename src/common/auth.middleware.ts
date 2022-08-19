@@ -22,13 +22,13 @@ class AuthMiddleware implements IMiddleware {
       const authorizationHeader = req.headers.authorization
 
       if (!authorizationHeader) {
-        throw new Error('Not authorized')
+        throw HttpError.Unathorized()
       }
 
       const accessToken = authorizationHeader.split(' ')[1]
 
       if (!accessToken) {
-        throw new Error('Not authorized')
+        throw HttpError.Unathorized()
       }
 
       const dataFromToken = await this.tokenService.validateToken(
