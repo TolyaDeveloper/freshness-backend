@@ -25,14 +25,13 @@ class CategoriesController
       {
         method: 'get',
         path: '/categories',
-        func: this.findAllCategories,
-        middlewares: [new AuthMiddleware()]
+        func: this.findAllCategories
       },
       {
         method: 'post',
         path: '/categories/add',
         func: this.addCategories,
-        middlewares: [new ValidateMiddleware(CategoryDto)]
+        middlewares: [new AuthMiddleware(), new ValidateMiddleware(CategoryDto)]
       }
     ])
   }
