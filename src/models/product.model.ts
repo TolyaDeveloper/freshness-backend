@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 
 const productSchema = new mongoose.Schema({
   title: { type: String },
+  imageUri: { type: String, default: '/images/no-product-thumbnail.png' },
   description: { type: String },
   smallDescription: { type: String },
   descriptionBlock: {
@@ -16,7 +17,7 @@ const productSchema = new mongoose.Schema({
     ]
   },
   price: { type: Number },
-  oldPrice: { type: Number },
+  newPrice: { type: Number },
   rating: { type: Number, min: 0, max: 5, default: 0 },
   sku: { type: Number },
   category: {
