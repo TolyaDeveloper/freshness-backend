@@ -7,6 +7,7 @@ import {
   verify
 } from 'jsonwebtoken'
 import { TYPES } from '../../types'
+import { HttpError } from '../../exceptions/http-error.class'
 import { IConfigService } from '../../config/config.service.interface'
 import { ITokenService } from './interfaces/token.service.interface'
 import { ITokenRepository } from './interfaces/token.repository.interface'
@@ -82,7 +83,7 @@ class TokenService implements ITokenService {
     const result = await this.tokenRepository.removeRefreshToken(refreshToken)
 
     if (!result) {
-      throw new Error('Such session does not exist!')
+      throw HttpError.SESSION_DOES_NOT_EXIST()
     }
   }
 

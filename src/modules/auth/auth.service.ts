@@ -1,6 +1,7 @@
 import { injectable, inject } from 'inversify'
 import { nanoid } from 'nanoid'
 import { TYPES } from '../../types'
+import { HttpError } from '../../exceptions/http-error.class'
 import { SignupDto } from './dto/signup.dto'
 import { hash, compare } from 'bcryptjs'
 import { IConfigService } from '../../config/config.service.interface'
@@ -30,7 +31,7 @@ class AuthService implements IAuthService {
     const candidate = await this.authRepository.findByEmail(email)
 
     if (candidate) {
-      throw new Error(`User with email ${email} already exists!`)
+      throw HttpError.EMAIL_ALREADY_EXISTS(email)
     }
 
     const hashedPassword = await hash(
@@ -66,13 +67,13 @@ class AuthService implements IAuthService {
     const user = await this.authRepository.findByEmail(email)
 
     if (!user) {
-      throw new Error(`User with email ${email} does not exist!`)
+      throw HttpError.EMAIL_DOES_NOT_EXIST(email)
     }
 
     const isPasswordCorrect = await compare(password, user.password)
 
     if (!isPasswordCorrect) {
-      throw new Error(`Password is not correct!`)
+      throw HttpError.INCORRECT_PASSWORD()
     }
 
     const tokens = this.tokenService.generateAccessAndRefreshTokens({
@@ -89,7 +90,7 @@ class AuthService implements IAuthService {
     const user = await this.authRepository.findUserByActivationLink(link)
 
     if (!user) {
-      throw new Error('Such user does not exist!')
+      throw HttpError.ACCOUNT_ACTIVATION_FAILED()
     }
 
     user.isActivated = true
@@ -103,7 +104,7 @@ class AuthService implements IAuthService {
 
   public async refresh(refreshToken: string) {
     if (!refreshToken) {
-      throw new Error('Unathorized!')
+      throw HttpError.Unathorized()
     }
 
     const validatedToken = await this.tokenService.validateToken(
@@ -113,7 +114,7 @@ class AuthService implements IAuthService {
     const tokenFromDb = await this.tokenService.findRefreshToken(refreshToken)
 
     if (!validatedToken || !tokenFromDb) {
-      throw new Error('Unathorized!')
+      throw HttpError.Unathorized()
     }
 
     const user = (await this.authRepository.findUserById(
