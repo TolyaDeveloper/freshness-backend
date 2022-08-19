@@ -6,9 +6,9 @@ import { SignupDto } from './dto/signup.dto'
 import { hash, compare } from 'bcryptjs'
 import { IConfigService } from '../../config/config.service.interface'
 import { IAuthService } from './interfaces/auth.service.interface'
+import { IUserRepository } from '../user/interfaces/user.repository.interface'
 import { LoginDto } from './dto/login.dto'
 import { ITokenService } from '../../services/token/interfaces/token.service.interface'
-import { IAuthRepository } from './interfaces/auth.repository.interface'
 import { ITokens } from '../../interfaces/token.interface'
 import { IMailService } from '../../services/mail/interfaces/mail.service.inerface'
 import { UserModelType } from '../../models/user.model'
@@ -16,7 +16,7 @@ import { UserModelType } from '../../models/user.model'
 @injectable()
 class AuthService implements IAuthService {
   constructor(
-    @inject(TYPES.AuthRepository) private authRepository: IAuthRepository,
+    @inject(TYPES.AuthRepository) private userRepository: IUserRepository,
     @inject(TYPES.ConfigService) private configService: IConfigService,
     @inject(TYPES.TokenService) private tokenService: ITokenService,
     @inject(TYPES.MailService) private mailService: IMailService
@@ -28,7 +28,7 @@ class AuthService implements IAuthService {
     email,
     password
   }: SignupDto): Promise<ITokens> {
-    const candidate = await this.authRepository.findByEmail(email)
+    const candidate = await this.userRepository.findUserByEmail(email)
 
     if (candidate) {
       throw HttpError.USER_ALREADY_EXISTS(email)
@@ -40,7 +40,7 @@ class AuthService implements IAuthService {
     )
     const activationLink = nanoid()
 
-    const newUser = await this.authRepository.createUser({
+    const newUser = await this.userRepository.createUser({
       firstName,
       lastName,
       email,
@@ -64,7 +64,7 @@ class AuthService implements IAuthService {
   }
 
   public async login({ email, password }: LoginDto): Promise<ITokens> {
-    const user = await this.authRepository.findByEmail(email)
+    const user = await this.userRepository.findUserByEmail(email)
 
     if (!user) {
       throw HttpError.USER_DOES_NOT_EXIST(email)
@@ -87,7 +87,7 @@ class AuthService implements IAuthService {
   }
 
   public async activate(link: string): Promise<void> {
-    const user = await this.authRepository.findUserByActivationLink(link)
+    const user = await this.userRepository.findUserByActivationLink(link)
 
     if (!user) {
       throw HttpError.ACCOUNT_ACTIVATION_FAILED()
@@ -117,7 +117,7 @@ class AuthService implements IAuthService {
       throw HttpError.Unathorized()
     }
 
-    const user = (await this.authRepository.findUserById(
+    const user = (await this.userRepository.findUserById(
       validatedToken._id
     )) as UserModelType
     const tokens = this.tokenService.generateAccessAndRefreshTokens({

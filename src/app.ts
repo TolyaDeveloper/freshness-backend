@@ -8,6 +8,8 @@ import { IConfigService } from './config/config.service.interface'
 import { IExceptionFilter } from './exceptions/exception.filter.interface'
 import { ICategoriesController } from './modules/categories/interfaces/categories.controller.interface'
 import { IAuthController } from './modules/auth/interfaces/auth.controller.interface'
+import { UserController } from './modules/user/user.controller'
+import { IUserController } from './modules/user/interfaces/user.controller.interface'
 import cors from 'cors'
 import helmet from 'helmet'
 import cookieParser from 'cookie-parser'
@@ -25,7 +27,8 @@ class App {
     @inject(TYPES.ExceptionFilter) private exceptionFilter: IExceptionFilter,
     @inject(TYPES.CategoriesController)
     private categoriesController: ICategoriesController,
-    @inject(TYPES.AuthController) private authController: IAuthController
+    @inject(TYPES.AuthController) private authController: IAuthController,
+    @inject(TYPES.UserController) private userController: IUserController
   ) {
     this.port = Number(this.configService.get('PORT'))
     this.app = express()
@@ -44,6 +47,7 @@ class App {
   private useControllers(): void {
     this.app.use(this.categoriesController.router)
     this.app.use(this.authController.router)
+    this.app.use(this.userController.router)
   }
 
   private useExceptionFilters(): void {

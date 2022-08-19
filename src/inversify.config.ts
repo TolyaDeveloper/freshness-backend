@@ -27,6 +27,12 @@ import { TokenRepository } from './services/token/token.repository'
 import { ITokenRepository } from './services/token/interfaces/token.repository.interface'
 import { MailService } from './services/mail/mail.service'
 import { IMailService } from './services/mail/interfaces/mail.service.inerface'
+import { UserController } from './modules/user/user.controller'
+import { IUserController } from './modules/user/interfaces/user.controller.interface'
+import { UserRepository } from './modules/user/user.repository'
+import { IUserRepository } from './modules/user/interfaces/user.repository.interface'
+import { UserService } from './modules/user/user.service'
+import { IUserService } from './modules/user/interfaces/user.service.interface'
 
 const bindings = new ContainerModule((bind: interfaces.Bind) => {
   bind<App>(TYPES.App).to(App)
@@ -50,6 +56,10 @@ const bindings = new ContainerModule((bind: interfaces.Bind) => {
     .to(TokenRepository)
     .inSingletonScope()
   bind<IMailService>(TYPES.MailService).to(MailService)
+
+  bind<IUserController>(TYPES.UserController).to(UserController)
+  bind<IUserRepository>(TYPES.UserRepository).to(UserRepository)
+  bind<IUserService>(TYPES.UserService).to(UserService)
 })
 
 const container = new Container()
