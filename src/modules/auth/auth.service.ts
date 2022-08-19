@@ -31,7 +31,7 @@ class AuthService implements IAuthService {
     const candidate = await this.authRepository.findByEmail(email)
 
     if (candidate) {
-      throw HttpError.EMAIL_ALREADY_EXISTS(email)
+      throw HttpError.USER_ALREADY_EXISTS(email)
     }
 
     const hashedPassword = await hash(
@@ -67,7 +67,7 @@ class AuthService implements IAuthService {
     const user = await this.authRepository.findByEmail(email)
 
     if (!user) {
-      throw HttpError.EMAIL_DOES_NOT_EXIST(email)
+      throw HttpError.USER_DOES_NOT_EXIST(email)
     }
 
     const isPasswordCorrect = await compare(password, user.password)
