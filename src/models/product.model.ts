@@ -1,11 +1,12 @@
 import mongoose from 'mongoose'
 
 const productSchema = new mongoose.Schema({
-  title: { type: String },
+  title: { type: String, required: true },
   imageUri: { type: String, default: '/images/no-product-thumbnail.png' },
-  description: { type: String },
-  smallDescription: { type: String },
+  description: { type: String, required: true },
+  smallDescription: { type: String, required: true },
   descriptionBlock: {
+    default: {},
     origins: { type: String },
     howToCook: { type: String },
     vitamins: [
@@ -16,20 +17,22 @@ const productSchema = new mongoose.Schema({
       }
     ]
   },
-  price: { type: Number },
+  price: { type: Number, required: true },
   newPrice: { type: Number },
   rating: { type: Number, min: 0, max: 5, default: 0 },
-  sku: { type: Number },
-  category: {
-    ref: 'Category',
-    type: mongoose.Schema.Types.ObjectId
-  },
-  farm: { type: String },
-  buyBy: { type: String },
-  freshness: { type: String },
-  inStock: { type: Number },
-  deliveryTime: { type: String },
-  deliveryArea: { type: String },
+  sku: { type: Number, required: true },
+  categories: [
+    {
+      ref: 'Category',
+      type: mongoose.Schema.Types.ObjectId
+    }
+  ],
+  farm: { type: String, required: true },
+  buyBy: { type: String, required: true },
+  freshness: { type: String, required: true },
+  inStock: { type: Boolean, required: true },
+  deliveryTime: { type: String, required: true },
+  deliveryArea: { type: [String], required: true },
   reviews: { type: Array, default: [] },
   questions: { type: Array, default: [] }
 })

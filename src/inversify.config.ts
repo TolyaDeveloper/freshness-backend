@@ -15,12 +15,12 @@ import { AuthRepository } from './modules/auth/auth.repository'
 import { IAuthRepository } from './modules/auth/interfaces/auth.repository.interface'
 import { AuthService } from './modules/auth/auth.service'
 import { IAuthService } from './modules/auth/interfaces/auth.service.interface'
-import { CategoriesController } from './modules/categories/categories.controller'
-import { ICategoriesController } from './modules/categories/interfaces/categories.controller.interface'
-import { CategoriesRepository } from './modules/categories/categories.repository'
-import { ICategoriesRepository } from './modules/categories/interfaces/categories.repository.interface'
-import { CategoriesService } from './modules/categories/categories.service'
-import { ICategoriesService } from './modules/categories/interfaces/categories.service.interface'
+import { ShopController } from './modules/shop/shop.controller'
+import { IShopController } from './modules/shop/interfaces/shop.controller.interface'
+import { ShopRepository } from './modules/shop/shop.repository'
+import { IShopRepository } from './modules/shop/interfaces/shop.repository.interface'
+import { ShopService } from './modules/shop/shop.service'
+import { IShopService } from './modules/shop/interfaces/shop.service.interface'
 import { TokenService } from './services/token/token.service'
 import { ITokenService } from './services/token/interfaces/token.service.interface'
 import { TokenRepository } from './services/token/token.repository'
@@ -40,14 +40,9 @@ const bindings = new ContainerModule((bind: interfaces.Bind) => {
   bind<ILoggerService>(TYPES.LoggerService).to(LoggerService).inSingletonScope()
   bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope()
   bind<IExceptionFilter>(TYPES.ExceptionFilter).to(ExceptionFilter)
-  bind<ICategoriesController>(TYPES.CategoriesController).to(
-    CategoriesController
-  )
-  bind<ICategoriesRepository>(TYPES.CategoriesRepository).to(
-    CategoriesRepository
-  )
-  bind<ICategoriesService>(TYPES.CategoriesService).to(CategoriesService)
-
+  bind<IShopController>(TYPES.ShopController).to(ShopController)
+  bind<IShopRepository>(TYPES.ShopRepository).to(ShopRepository)
+  bind<IShopService>(TYPES.ShopService).to(ShopService)
   bind<IAuthController>(TYPES.AuthController).to(AuthController)
   bind<IAuthRepository>(TYPES.AuthRepository).to(AuthRepository)
   bind<IAuthService>(TYPES.AuthService).to(AuthService)
