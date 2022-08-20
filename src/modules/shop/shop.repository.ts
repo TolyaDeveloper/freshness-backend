@@ -5,6 +5,8 @@ import { CategoryDto } from './dto/category.dto'
 import { ProductDto } from './dto/product.dto'
 import { IShopRepository } from './interfaces/shop.repository.interface'
 import mongoose from 'mongoose'
+import { tagModel } from '../../models/tag.model'
+import { TagDto } from './dto/tag.dto'
 
 @injectable()
 class ShopRepository implements IShopRepository {
@@ -20,8 +22,16 @@ class ShopRepository implements IShopRepository {
     return productModel.create(product)
   }
 
-  public async getProductById(id: mongoose.Types.ObjectId) {
-    return productModel.findById(id).populate('categories')
+  public async findProductById(id: mongoose.Types.ObjectId) {
+    return productModel.findById(id).populate('categories').lean()
+  }
+
+  public async findTagById(id: mongoose.Types.ObjectId) {
+    return tagModel.findById(id).lean()
+  }
+
+  public async addTags(tags: TagDto[]) {
+    return tagModel.insertMany(tags)
   }
 }
 

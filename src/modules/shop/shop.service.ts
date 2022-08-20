@@ -6,6 +6,7 @@ import { IShopRepository } from './interfaces/shop.repository.interface'
 import { IShopService } from './interfaces/shop.service.interface'
 import { ProductDto } from './dto/product.dto'
 import mongoose from 'mongoose'
+import { TagDto } from './dto/tag.dto'
 
 @injectable()
 class ShopService implements IShopService {
@@ -28,8 +29,16 @@ class ShopService implements IShopService {
     return this.shopRepository.createProduct(product)
   }
 
-  public async getProductById(id: mongoose.Types.ObjectId) {
-    return this.shopRepository.getProductById(id)
+  public async findProductById(id: mongoose.Types.ObjectId) {
+    return this.shopRepository.findProductById(id)
+  }
+
+  public async findTagById(id: mongoose.Types.ObjectId) {
+    return this.shopRepository.findTagById(id)
+  }
+
+  public async addTags(tags: TagDto[]) {
+    return this.shopRepository.addTags(tags)
   }
 }
 

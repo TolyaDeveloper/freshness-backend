@@ -10,6 +10,8 @@ import { CategoryDto } from './dto/category.dto'
 import { ProductDto } from './dto/product.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
 import { AuthMiddleware } from '../../common/auth.middleware'
+import mongoose from 'mongoose'
+import { TagDto } from './dto/tag.dto'
 
 @injectable()
 class ShopController extends BaseController implements IShopController {
@@ -32,6 +34,11 @@ class ShopController extends BaseController implements IShopController {
         middlewares: [new AuthMiddleware(), new ValidateMiddleware(CategoryDto)]
       },
       {
+        method: 'get',
+        path: '/product/:id',
+        func: this.findProductById
+      },
+      {
         method: 'post',
         path: '/product/add',
         func: this.addProduct,
@@ -39,8 +46,14 @@ class ShopController extends BaseController implements IShopController {
       },
       {
         method: 'get',
-        path: '/product/:id',
-        func: this.findProductById
+        path: '/tag/:id',
+        func: this.findTagById
+      },
+      {
+        method: 'post',
+        path: '/tags/add',
+        func: this.addTags,
+        middlewares: [new ValidateMiddleware(TagDto)]
       }
     ])
   }
@@ -86,19 +99,21 @@ class ShopController extends BaseController implements IShopController {
     try {
       await this.shopService.addProduct(req.body)
 
-      res.json({ message: 'New product have been saved!' })
+      res.json({ message: 'New product has been saved!' })
     } catch (err) {
       next(new HttpError(500, 'Could not save new product!'))
     }
   }
 
   public async findProductById(
-    req: Request<any, {}, ProductDto>,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const product = await this.shopService.getProductById(req.params.id)
+      const product = await this.shopService.findProductById(
+        req.params.id as unknown as mongoose.Types.ObjectId
+      )
 
       if (!product) {
         throw HttpError.NotFound()
@@ -108,6 +123,44 @@ class ShopController extends BaseController implements IShopController {
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(404, err.message))
+      }
+    }
+  }
+
+  public async findTagById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const tag = await this.shopService.findTagById(
+        req.params.id as unknown as mongoose.Types.ObjectId
+      )
+
+      if (!tag) {
+        throw HttpError.NotFound()
+      }
+
+      res.json(tag)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(404, err.message))
+      }
+    }
+  }
+
+  public async addTags(
+    req: Request<{}, {}, TagDto[]>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const tags = await this.shopService.addTags(req.body)
+
+      res.json({ message: 'New tags created!' })
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(500, err.message))
       }
     }
   }

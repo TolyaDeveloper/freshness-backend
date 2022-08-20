@@ -47,6 +47,9 @@ class ProductDto {
   public sku: number
 
   @IsArray()
+  public tags: string[]
+
+  @IsArray()
   public categories: string[]
 
   @IsString()

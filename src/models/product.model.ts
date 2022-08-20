@@ -21,6 +21,12 @@ const productSchema = new mongoose.Schema({
   newPrice: { type: Number },
   rating: { type: Number, min: 0, max: 5, default: 0 },
   sku: { type: Number, required: true },
+  tags: [
+    {
+      ref: 'Tag',
+      type: mongoose.Schema.Types.ObjectId
+    }
+  ],
   categories: [
     {
       ref: 'Category',
