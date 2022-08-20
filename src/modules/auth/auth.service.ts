@@ -16,7 +16,7 @@ import { UserModelType } from '../../models/user.model'
 @injectable()
 class AuthService implements IAuthService {
   constructor(
-    @inject(TYPES.AuthRepository) private userRepository: IUserRepository,
+    @inject(TYPES.UserRepository) private userRepository: IUserRepository,
     @inject(TYPES.ConfigService) private configService: IConfigService,
     @inject(TYPES.TokenService) private tokenService: ITokenService,
     @inject(TYPES.MailService) private mailService: IMailService
