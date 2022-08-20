@@ -6,7 +6,6 @@ import { IShopRepository } from './interfaces/shop.repository.interface'
 import { IShopService } from './interfaces/shop.service.interface'
 import { ProductDto } from './dto/product.dto'
 import mongoose from 'mongoose'
-import { HttpError } from '../../exceptions/http-error.class'
 
 @injectable()
 class ShopService implements IShopService {

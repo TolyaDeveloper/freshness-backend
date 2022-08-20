@@ -1,10 +1,10 @@
 import { injectable } from 'inversify'
-import mongoose from 'mongoose'
 import { categoryModel } from '../../models/category.model'
 import { productModel } from '../../models/product.model'
 import { CategoryDto } from './dto/category.dto'
 import { ProductDto } from './dto/product.dto'
 import { IShopRepository } from './interfaces/shop.repository.interface'
+import mongoose from 'mongoose'
 
 @injectable()
 class ShopRepository implements IShopRepository {

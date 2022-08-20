@@ -10,7 +10,6 @@ import { CategoryDto } from './dto/category.dto'
 import { ProductDto } from './dto/product.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
 import { AuthMiddleware } from '../../common/auth.middleware'
-import mongoose from 'mongoose'
 
 @injectable()
 class ShopController extends BaseController implements IShopController {
