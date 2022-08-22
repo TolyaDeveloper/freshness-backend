@@ -6,9 +6,8 @@ import { IDatabaseService } from './database/database.service.interface'
 import { ILoggerService } from './logger/logger.service.interface'
 import { IConfigService } from './config/config.service.interface'
 import { IExceptionFilter } from './exceptions/exception.filter.interface'
-import { ICategoriesController } from './modules/categories/interfaces/categories.controller.interface'
+import { IShopController } from './modules/shop/interfaces/shop.controller.interface'
 import { IAuthController } from './modules/auth/interfaces/auth.controller.interface'
-import { UserController } from './modules/user/user.controller'
 import { IUserController } from './modules/user/interfaces/user.controller.interface'
 import cors from 'cors'
 import helmet from 'helmet'
@@ -25,8 +24,8 @@ class App {
     @inject(TYPES.LoggerService) private logger: ILoggerService,
     @inject(TYPES.ConfigService) private configService: IConfigService,
     @inject(TYPES.ExceptionFilter) private exceptionFilter: IExceptionFilter,
-    @inject(TYPES.CategoriesController)
-    private categoriesController: ICategoriesController,
+    @inject(TYPES.ShopController)
+    private shopController: IShopController,
     @inject(TYPES.AuthController) private authController: IAuthController,
     @inject(TYPES.UserController) private userController: IUserController
   ) {
@@ -45,7 +44,7 @@ class App {
   }
 
   private useControllers(): void {
-    this.app.use(this.categoriesController.router)
+    this.app.use(this.shopController.router)
     this.app.use(this.authController.router)
     this.app.use(this.userController.router)
   }

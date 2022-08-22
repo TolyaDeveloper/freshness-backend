@@ -11,6 +11,10 @@ class HttpError extends Error {
     return new Error('Forbidden!')
   }
 
+  static NotFound() {
+    return new Error('Not Found!')
+  }
+
   static USER_ALREADY_EXISTS(email: string) {
     return new Error(`User with email ${email} already exists!`)
   }
