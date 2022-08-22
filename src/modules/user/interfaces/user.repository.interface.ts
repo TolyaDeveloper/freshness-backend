@@ -1,5 +1,7 @@
 import { UserModelType } from '../../../models/user.model'
+import { CustomerReviewModelType } from '../../../models/customer-review.model'
 import { SignupDto } from '../../auth/dto/signup.dto'
+import { CustomerReviewDto } from '../dto/customer-review.dto'
 import mongoose from 'mongoose'
 
 export interface IUserRepository {
@@ -9,4 +11,8 @@ export interface IUserRepository {
     activationLink: string
   ) => Promise<(UserModelType & mongoose.Document) | null>
   findUserById: (id: mongoose.Types.ObjectId) => Promise<UserModelType | null>
+  findCustomersReviews: () => Promise<CustomerReviewModelType[]>
+  addCustomerReview: (
+    customerReviewDto: CustomerReviewDto
+  ) => Promise<CustomerReviewModelType>
 }
