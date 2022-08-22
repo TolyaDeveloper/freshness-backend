@@ -46,9 +46,11 @@ class ProductDto {
   @IsNumber()
   public sku: number
 
+  @IsString({ each: true })
   @IsArray()
   public tags: string[]
 
+  @IsString({ each: true })
   @IsArray()
   public categories: string[]
 

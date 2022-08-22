@@ -8,11 +8,11 @@ import { TagDto } from '../dto/tag.dto'
 
 export interface IShopRepository {
   findAllCategories: () => Promise<CategoryModelType[]>
-  addCategories: (categories: CategoryDto[]) => Promise<CategoryModelType[]>
+  addCategory: (category: CategoryDto) => Promise<CategoryModelType>
   createProduct: (product: ProductDto) => Promise<ProductModelType>
   findProductById: (
     id: mongoose.Types.ObjectId
   ) => Promise<ProductModelType | null>
   findTagById: (id: mongoose.Types.ObjectId) => Promise<TagModelType | null>
-  addTags: (tags: TagDto[]) => Promise<TagModelType[]>
+  addTag: (tag: TagDto) => Promise<TagModelType>
 }

@@ -1,12 +1,12 @@
 import { injectable } from 'inversify'
 import { categoryModel } from '../../models/category.model'
 import { productModel } from '../../models/product.model'
+import { tagModel } from '../../models/tag.model'
+import { IShopRepository } from './interfaces/shop.repository.interface'
 import { CategoryDto } from './dto/category.dto'
 import { ProductDto } from './dto/product.dto'
-import { IShopRepository } from './interfaces/shop.repository.interface'
-import mongoose from 'mongoose'
-import { tagModel } from '../../models/tag.model'
 import { TagDto } from './dto/tag.dto'
+import mongoose from 'mongoose'
 
 @injectable()
 class ShopRepository implements IShopRepository {
@@ -14,8 +14,8 @@ class ShopRepository implements IShopRepository {
     return categoryModel.find().lean()
   }
 
-  public async addCategories(categories: CategoryDto[]) {
-    return categoryModel.insertMany(categories)
+  public async addCategory(category: CategoryDto) {
+    return categoryModel.create(category)
   }
 
   public async createProduct(product: ProductDto) {
@@ -30,8 +30,8 @@ class ShopRepository implements IShopRepository {
     return tagModel.findById(id).lean()
   }
 
-  public async addTags(tags: TagDto[]) {
-    return tagModel.insertMany(tags)
+  public async addTag(tag: TagDto) {
+    return tagModel.create(tag)
   }
 }
 

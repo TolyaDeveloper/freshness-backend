@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import mongoose from 'mongoose'
 import { BaseController } from '../../../common/base.controller'
-import { ProductDto } from '../dto/product.dto'
 
 export interface IShopController extends BaseController {
   findAllCategories: (
@@ -9,7 +7,7 @@ export interface IShopController extends BaseController {
     res: Response,
     next: NextFunction
   ) => Promise<void>
-  addCategories: (
+  addCategory: (
     req: Request,
     res: Response,
     next: NextFunction
@@ -25,5 +23,5 @@ export interface IShopController extends BaseController {
     res: Response,
     next: NextFunction
   ) => Promise<void>
-  addTags: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  addTag: (req: Request, res: Response, next: NextFunction) => Promise<void>
 }

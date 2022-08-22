@@ -30,29 +30,29 @@ class ShopController extends BaseController implements IShopController {
       {
         method: 'post',
         path: '/categories/add',
-        func: this.addCategories,
-        middlewares: [new AuthMiddleware(), new ValidateMiddleware(CategoryDto)]
+        func: this.addCategory,
+        middlewares: [new ValidateMiddleware(CategoryDto)]
       },
       {
         method: 'get',
-        path: '/product/:id',
+        path: '/products/:id',
         func: this.findProductById
       },
       {
         method: 'post',
-        path: '/product/add',
+        path: '/products/add',
         func: this.addProduct,
         middlewares: [new ValidateMiddleware(ProductDto)]
       },
       {
         method: 'get',
-        path: '/tag/:id',
+        path: '/tags/:id',
         func: this.findTagById
       },
       {
         method: 'post',
         path: '/tags/add',
-        func: this.addTags,
+        func: this.addTag,
         middlewares: [new ValidateMiddleware(TagDto)]
       }
     ])
@@ -68,26 +68,25 @@ class ShopController extends BaseController implements IShopController {
 
       res.json(categories)
     } catch (err) {
-      next(
-        new HttpError(
-          404,
-          'Could not get categories! Service might be unavailable'
-        )
-      )
+      if (err instanceof Error) {
+        return next(new HttpError(404, err.message))
+      }
     }
   }
 
-  public async addCategories(
-    req: Request<{}, {}, CategoryDto[]>,
+  public async addCategory(
+    req: Request<{}, {}, CategoryDto>,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      await this.shopService.addCategories(req.body)
+      await this.shopService.addCategory(req.body)
 
-      res.json({ message: 'New categories have been saved!' })
+      res.json({ message: 'New category has been created!' })
     } catch (err) {
-      next(new HttpError(500, 'Could not save new categories!'))
+      if (err instanceof Error) {
+        return next(new HttpError(500, err.message))
+      }
     }
   }
 
@@ -99,9 +98,11 @@ class ShopController extends BaseController implements IShopController {
     try {
       await this.shopService.addProduct(req.body)
 
-      res.json({ message: 'New product has been saved!' })
+      res.json({ message: 'New product has been created!' })
     } catch (err) {
-      next(new HttpError(500, 'Could not save new product!'))
+      if (err instanceof Error) {
+        return next(new HttpError(500, err.message))
+      }
     }
   }
 
@@ -149,15 +150,15 @@ class ShopController extends BaseController implements IShopController {
     }
   }
 
-  public async addTags(
-    req: Request<{}, {}, TagDto[]>,
+  public async addTag(
+    req: Request<{}, {}, TagDto>,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const tags = await this.shopService.addTags(req.body)
+      await this.shopService.addTag(req.body)
 
-      res.json({ message: 'New tags created!' })
+      res.json({ message: 'New tag has been created!' })
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(500, err.message))
