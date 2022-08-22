@@ -9,6 +9,7 @@ import {
   IsNotEmptyObject,
   IsBoolean
 } from 'class-validator'
+import mongoose from 'mongoose'
 
 class ProductDto {
   @IsString()
@@ -85,8 +86,8 @@ class ProductDto {
 interface IFindProductsQueries {
   limit: number
   skip: number
-  category: string
-  tag: string
+  category: mongoose.Types.ObjectId
+  tag: mongoose.Types.ObjectId
 }
 
 export { ProductDto, IFindProductsQueries }
