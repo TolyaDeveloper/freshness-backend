@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema({
     ]
   },
   price: { type: Number, required: true },
-  newPrice: { type: Number },
+  oldPrice: { type: Number },
   rating: { type: Number, min: 0, max: 5, default: 0 },
   sku: { type: Number, required: true },
   tags: [

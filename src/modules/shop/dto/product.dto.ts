@@ -37,7 +37,7 @@ class ProductDto {
   @IsPositive()
   @IsNumber()
   @IsOptional()
-  public newPrice: number
+  public oldPrice: number
 
   @IsNumber()
   @IsIn([0, 1, 2, 3, 4, 5])
