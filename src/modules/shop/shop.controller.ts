@@ -7,7 +7,7 @@ import { IShopController } from './interfaces/shop.controller.interface'
 import { IShopService } from './interfaces/shop.service.interface'
 import { ILoggerService } from '../../logger/logger.service.interface'
 import { CategoryDto } from './dto/category.dto'
-import { ProductDto } from './dto/product.dto'
+import { ProductDto, IFindProductsQueries } from './dto/product.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
 import { AuthMiddleware } from '../../common/auth.middleware'
 import mongoose from 'mongoose'
@@ -37,6 +37,11 @@ class ShopController extends BaseController implements IShopController {
         method: 'get',
         path: '/products/:id',
         func: this.findProductById
+      },
+      {
+        method: 'get',
+        path: '/products',
+        func: this.findProducts
       },
       {
         method: 'post',
@@ -102,6 +107,28 @@ class ShopController extends BaseController implements IShopController {
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(500, err.message))
+      }
+    }
+  }
+
+  public async findProducts(
+    req: Request<{}, {}, {}, IFindProductsQueries>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { limit = 9, skip = 0, ...rest } = req.query
+
+      const products = await this.shopService.findProducts({
+        limit,
+        skip,
+        ...rest
+      })
+
+      res.json(products)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(404, err.message))
       }
     }
   }

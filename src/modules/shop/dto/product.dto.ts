@@ -69,6 +69,7 @@ class ProductDto {
   @IsString()
   public deliveryTime: string
 
+  @IsString({ each: true })
   @IsArray()
   public deliveryArea: string[]
 
@@ -81,4 +82,11 @@ class ProductDto {
   public questions: any[]
 }
 
-export { ProductDto }
+interface IFindProductsQueries {
+  limit: number
+  skip: number
+  category: string
+  tag: string
+}
+
+export { ProductDto, IFindProductsQueries }

@@ -13,6 +13,11 @@ export interface IShopController extends BaseController {
     next: NextFunction
   ) => Promise<void>
   addProduct: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  findProducts: (
+    req: Request<any, any, any, any>,
+    res: Response,
+    next: NextFunction
+  ) => Promise<void>
   findProductById: (
     req: Request,
     res: Response,

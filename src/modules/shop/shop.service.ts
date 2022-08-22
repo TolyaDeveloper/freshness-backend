@@ -4,7 +4,7 @@ import { CategoryModelType } from '../../models/category.model'
 import { CategoryDto } from './dto/category.dto'
 import { IShopRepository } from './interfaces/shop.repository.interface'
 import { IShopService } from './interfaces/shop.service.interface'
-import { ProductDto } from './dto/product.dto'
+import { ProductDto, IFindProductsQueries } from './dto/product.dto'
 import { TagDto } from './dto/tag.dto'
 import mongoose from 'mongoose'
 
@@ -25,6 +25,10 @@ class ShopService implements IShopService {
 
   public async addProduct(product: ProductDto) {
     return this.shopRepository.createProduct(product)
+  }
+
+  public async findProducts(queries: IFindProductsQueries) {
+    return this.shopRepository.findProducts(queries)
   }
 
   public async findProductById(id: mongoose.Types.ObjectId) {
