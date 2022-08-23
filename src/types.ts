@@ -13,6 +13,9 @@ const TYPES = {
   UserController: Symbol.for('UserController'),
   UserRepository: Symbol.for('UserRepository'),
   UserService: Symbol.for('UserService'),
+  BlogController: Symbol.for('BlogController'),
+  BlogRepository: Symbol.for('BlogRepository'),
+  BlogService: Symbol.for('BlogService'),
   TokenService: Symbol.for('TokenService'),
   TokenRepository: Symbol.for('TokenRepository'),
   MailService: Symbol.for('MailService')

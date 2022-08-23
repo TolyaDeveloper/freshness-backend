@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { BaseController } from '../../../common/base.controller'
+import { IFindProductsQueries } from '../dto/product.dto'
 
 export interface IShopController extends BaseController {
   findAllCategories: (
@@ -14,7 +15,7 @@ export interface IShopController extends BaseController {
   ) => Promise<void>
   addProduct: (req: Request, res: Response, next: NextFunction) => Promise<void>
   findProducts: (
-    req: Request<any, any, any, any>,
+    req: Request<{}, {}, {}, IFindProductsQueries>,
     res: Response,
     next: NextFunction
   ) => Promise<void>

@@ -22,15 +22,10 @@ class ShopRepository implements IShopRepository {
     return productModel.create(product)
   }
 
-  public async findProducts({
-    limit,
-    skip,
-    category,
-    tag
-  }: IFindProductsQueries) {
-    if (category || tag) {
+  public async findProducts({ limit, skip, ...rest }: IFindProductsQueries) {
+    if (Object.keys(rest).length !== 0) {
       return productModel
-        .find({ $or: [{ categories: category }, { tags: tag }] })
+        .find({ $or: [{ categories: rest.category }, { tags: rest.tag }] })
         .limit(limit)
         .skip(skip)
         .lean()
