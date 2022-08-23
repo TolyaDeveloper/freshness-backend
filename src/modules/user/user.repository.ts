@@ -3,6 +3,8 @@ import { IUserRepository } from './interfaces/user.repository.interface'
 import { userModel } from '../../models/user.model'
 import { SignupDto } from '../auth/dto/signup.dto'
 import mongoose from 'mongoose'
+import { customerReviewModel } from '../../models/customer-review.model'
+import { CustomerReviewDto } from './dto/customer-review.dto'
 
 @injectable()
 class UserRepository implements IUserRepository {
@@ -20,6 +22,14 @@ class UserRepository implements IUserRepository {
 
   public async findUserById(id: mongoose.Types.ObjectId) {
     return userModel.findById(id).lean()
+  }
+
+  public async findCustomersReviews() {
+    return customerReviewModel.find().lean()
+  }
+
+  public async addCustomerReview(customerReviewDto: CustomerReviewDto) {
+    return customerReviewModel.create(customerReviewDto)
   }
 }
 
