@@ -1,3 +1,4 @@
+import { PATH_TO_IMAGES } from '../constants/common'
 import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema({
@@ -7,7 +8,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true, min: 8 },
   isActivated: { type: Boolean, default: false },
   activationLink: { type: String },
-  avatarUri: { type: String, default: '/images/default-avatar-96.png' },
+  avatarUri: { type: String, default: PATH_TO_IMAGES.DEFAULT_AVATAR },
   wishlist: [
     {
       ref: 'Product',

@@ -33,6 +33,12 @@ import { UserRepository } from './modules/user/user.repository'
 import { IUserRepository } from './modules/user/interfaces/user.repository.interface'
 import { UserService } from './modules/user/user.service'
 import { IUserService } from './modules/user/interfaces/user.service.interface'
+import { BlogController } from './modules/blog/blog.controller'
+import { IBlogController } from './modules/blog/interfaces/blog.controller.interface'
+import { BlogRepository } from './modules/blog/blog.repository'
+import { IBlogRepository } from './modules/blog/interfaces/blog.repository.interface'
+import { BlogService } from './modules/blog/blog.service'
+import { IBlogService } from './modules/blog/interfaces/blog.service.interface'
 
 const bindings = new ContainerModule((bind: interfaces.Bind) => {
   bind<App>(TYPES.App).to(App)
@@ -55,6 +61,9 @@ const bindings = new ContainerModule((bind: interfaces.Bind) => {
   bind<IUserController>(TYPES.UserController).to(UserController)
   bind<IUserRepository>(TYPES.UserRepository).to(UserRepository)
   bind<IUserService>(TYPES.UserService).to(UserService)
+  bind<IBlogController>(TYPES.BlogController).to(BlogController)
+  bind<IBlogRepository>(TYPES.BlogRepository).to(BlogRepository)
+  bind<IBlogService>(TYPES.BlogService).to(BlogService)
 })
 
 const container = new Container()

@@ -12,6 +12,7 @@ import { IUserController } from './modules/user/interfaces/user.controller.inter
 import cors from 'cors'
 import helmet from 'helmet'
 import cookieParser from 'cookie-parser'
+import { IBlogController } from './modules/blog/interfaces/blog.controller.interface'
 
 @injectable()
 class App {
@@ -27,7 +28,8 @@ class App {
     @inject(TYPES.ShopController)
     private shopController: IShopController,
     @inject(TYPES.AuthController) private authController: IAuthController,
-    @inject(TYPES.UserController) private userController: IUserController
+    @inject(TYPES.UserController) private userController: IUserController,
+    @inject(TYPES.BlogController) private blogController: IBlogController
   ) {
     this.port = Number(this.configService.get('PORT'))
     this.app = express()
@@ -47,6 +49,7 @@ class App {
     this.app.use(this.shopController.router)
     this.app.use(this.authController.router)
     this.app.use(this.userController.router)
+    this.app.use(this.blogController.router)
   }
 
   private useExceptionFilters(): void {
