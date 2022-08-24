@@ -12,6 +12,7 @@ import { ITokenService } from '../../services/token/interfaces/token.service.int
 import { ITokens } from '../../interfaces/token.interface'
 import { IMailService } from '../../services/mail/interfaces/mail.service.inerface'
 import { UserModelType } from '../../models/user.model'
+import { IAuthRepository } from './interfaces/auth.repository.interface'
 
 @injectable()
 class AuthService implements IAuthService {
@@ -19,7 +20,8 @@ class AuthService implements IAuthService {
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
     @inject(TYPES.ConfigService) private configService: IConfigService,
     @inject(TYPES.TokenService) private tokenService: ITokenService,
-    @inject(TYPES.MailService) private mailService: IMailService
+    @inject(TYPES.MailService) private mailService: IMailService,
+    @inject(TYPES.AuthRepository) private authRepository: IAuthRepository
   ) {}
 
   public async signup({
@@ -38,6 +40,12 @@ class AuthService implements IAuthService {
       password,
       Number(this.configService.get('SALT'))
     )
+    const userRole = await this.authRepository.findRoleByName('USER')
+
+    if (!userRole) {
+      throw HttpError.ROLE_DOES_NOT_EXIST()
+    }
+
     const activationLink = nanoid()
 
     const newUser = await this.userRepository.createUser({
@@ -45,7 +53,8 @@ class AuthService implements IAuthService {
       lastName,
       email,
       password: hashedPassword,
-      activationLink
+      activationLink,
+      roles: [userRole.role]
     })
 
     await this.mailService.sendActivationEmail(
@@ -55,7 +64,8 @@ class AuthService implements IAuthService {
 
     const tokens = this.tokenService.generateAccessAndRefreshTokens({
       _id: newUser._id,
-      isActivated: newUser.isActivated
+      isActivated: newUser.isActivated,
+      roles: newUser.roles as string[]
     })
 
     await this.tokenService.saveRefreshToken(tokens.refreshToken, newUser._id)
@@ -78,7 +88,8 @@ class AuthService implements IAuthService {
 
     const tokens = this.tokenService.generateAccessAndRefreshTokens({
       _id: user._id,
-      isActivated: user.isActivated
+      isActivated: user.isActivated,
+      roles: user.roles as string[]
     })
 
     await this.tokenService.saveRefreshToken(tokens.refreshToken, user._id)
@@ -122,7 +133,8 @@ class AuthService implements IAuthService {
     )) as UserModelType
     const tokens = this.tokenService.generateAccessAndRefreshTokens({
       _id: user._id,
-      isActivated: user.isActivated
+      isActivated: user.isActivated,
+      roles: user.roles as string[]
     })
 
     await this.tokenService.saveRefreshToken(tokens.refreshToken, user._id)

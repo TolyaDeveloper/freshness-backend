@@ -15,6 +15,10 @@ class HttpError extends Error {
     return new Error('Not Found!')
   }
 
+  static ROLE_DOES_NOT_EXIST() {
+    return new Error(`Role does not exist!`)
+  }
+
   static USER_ALREADY_EXISTS(email: string) {
     return new Error(`User with email ${email} already exists!`)
   }

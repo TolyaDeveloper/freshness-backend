@@ -8,4 +8,5 @@ export interface ITokens {
 export interface ITokenPayload {
   _id: mongoose.Types.ObjectId
   isActivated: boolean
+  roles: string[]
 }

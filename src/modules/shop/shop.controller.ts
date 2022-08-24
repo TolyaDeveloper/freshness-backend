@@ -10,6 +10,7 @@ import { CategoryDto } from './dto/category.dto'
 import { ProductDto, IFindProductsQueries } from './dto/product.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
 import { AuthMiddleware } from '../../common/auth.middleware'
+import { RoleMiddleware } from '../../common/role.middleware'
 import mongoose from 'mongoose'
 import { TagDto } from './dto/tag.dto'
 
@@ -31,7 +32,10 @@ class ShopController extends BaseController implements IShopController {
         method: 'post',
         path: '/categories/add',
         func: this.addCategory,
-        middlewares: [new ValidateMiddleware(CategoryDto)]
+        middlewares: [
+          new RoleMiddleware(['ADMIN']),
+          new ValidateMiddleware(CategoryDto)
+        ]
       },
       {
         method: 'get',
