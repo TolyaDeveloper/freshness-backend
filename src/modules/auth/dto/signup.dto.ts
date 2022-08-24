@@ -16,6 +16,7 @@ class SignupDto {
   @IsString()
   public password: string
 
+  public roles: string[]
   public activationLink: string
 }
 

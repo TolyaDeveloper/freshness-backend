@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, min: 8 },
+  roles: [{ type: String, ref: 'Role' }],
   isActivated: { type: Boolean, default: false },
   activationLink: { type: String },
   avatarUri: { type: String, default: PATH_TO_IMAGES.DEFAULT_AVATAR },

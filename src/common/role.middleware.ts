@@ -1,15 +1,17 @@
 import { NextFunction, Request, Response } from 'express'
 import { IConfigService } from '../config/config.service.interface'
 import { HttpError } from '../exceptions/http-error.class'
+import { container } from '../inversify.config'
 import { ITokenService } from '../services/token/interfaces/token.service.interface'
 import { TYPES } from '../types'
 import { IMiddleware } from './middleware.interface'
-import { container } from '../inversify.config'
 
-class AuthMiddleware implements IMiddleware {
+class RoleMiddleware implements IMiddleware {
   // ? refactor
   private configService = container.get<IConfigService>(TYPES.ConfigService)
   private tokenService = container.get<ITokenService>(TYPES.TokenService)
+
+  constructor(private roles: string[]) {}
 
   public async execute(req: Request, res: Response, next: NextFunction) {
     try {
@@ -25,12 +27,23 @@ class AuthMiddleware implements IMiddleware {
         throw HttpError.Unathorized()
       }
 
-      const dataFromToken = await this.tokenService.validateToken(
+      const { roles: userRoles } = await this.tokenService.validateToken(
         accessToken,
         this.configService.get('JWT_ACCESS_SECRET')
       )
 
-      req.user = dataFromToken
+      let hasRole = false
+
+      userRoles.forEach(userRole => {
+        if (this.roles.includes(userRole)) {
+          hasRole = true
+        }
+      })
+
+      if (!hasRole) {
+        // ? fix: status code should be 403
+        throw HttpError.Forbidden()
+      }
 
       next()
     } catch (err) {
@@ -41,4 +54,4 @@ class AuthMiddleware implements IMiddleware {
   }
 }
 
-export { AuthMiddleware }
+export { RoleMiddleware }
