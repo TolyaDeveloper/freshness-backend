@@ -33,7 +33,7 @@ class ShopController extends BaseController implements IShopController {
         path: '/categories/add',
         func: this.addCategory,
         middlewares: [
-          new RoleMiddleware(['USER']),
+          new RoleMiddleware(['ADMIN']),
           new ValidateMiddleware(CategoryDto)
         ]
       },
