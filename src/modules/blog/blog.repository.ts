@@ -45,9 +45,16 @@ class BlogRepository implements IBlogRepository {
         .skip(skip)
         .lean()
         .populate('tags')
+        .populate('createdBy', 'avatarUri firstName')
     }
 
-    return postModel.find().limit(limit).skip(skip).lean().populate('tags')
+    return postModel
+      .find()
+      .limit(limit)
+      .skip(skip)
+      .lean()
+      .populate('tags')
+      .populate('createdBy', 'avatarUri firstName')
   }
 }
 
