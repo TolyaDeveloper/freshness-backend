@@ -45,6 +45,10 @@ class ShopRepository implements IShopRepository {
   public async addTag(tag: TagDto) {
     return tagModel.create(tag)
   }
+
+  public async findAllTags() {
+    return tagModel.find().lean()
+  }
 }
 
 export { ShopRepository }

@@ -30,4 +30,9 @@ export interface IShopController extends BaseController {
     next: NextFunction
   ) => Promise<void>
   addTag: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  findAllTags: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => Promise<void>
 }

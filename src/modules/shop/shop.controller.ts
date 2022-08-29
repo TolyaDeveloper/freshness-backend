@@ -63,6 +63,11 @@ class ShopController extends BaseController implements IShopController {
         path: '/tags/add',
         func: this.addTag,
         middlewares: [new ValidateMiddleware(TagDto)]
+      },
+      {
+        method: 'get',
+        path: '/tags',
+        func: this.findAllTags
       }
     ])
   }
@@ -193,6 +198,22 @@ class ShopController extends BaseController implements IShopController {
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(500, err.message))
+      }
+    }
+  }
+
+  public async findAllTags(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const tags = await this.shopService.findAllTags()
+
+      res.json(tags)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(404, err.message))
       }
     }
   }

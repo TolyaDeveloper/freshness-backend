@@ -42,6 +42,10 @@ class ShopService implements IShopService {
   public async addTag(tag: TagDto) {
     return this.shopRepository.addTag(tag)
   }
+
+  public async findAllTags() {
+    return this.shopRepository.findAllTags()
+  }
 }
 
 export { ShopService }

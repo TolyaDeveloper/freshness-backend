@@ -16,4 +16,5 @@ export interface IShopRepository {
   ) => Promise<ProductModelType | null>
   findTagById: (id: mongoose.Types.ObjectId) => Promise<TagModelType | null>
   addTag: (tag: TagDto) => Promise<TagModelType>
+  findAllTags: () => Promise<TagModelType[]>
 }
