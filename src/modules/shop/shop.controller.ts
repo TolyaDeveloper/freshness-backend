@@ -210,8 +210,6 @@ class ShopController extends BaseController implements IShopController {
     try {
       const tags = await this.shopService.findAllTags()
 
-      console.log(req.query)
-
       res.json(tags)
     } catch (err) {
       if (err instanceof Error) {
