@@ -2,10 +2,10 @@ import { injectable } from 'inversify'
 import { IUserRepository } from './interfaces/user.repository.interface'
 import { userModel } from '../../models/user.model'
 import { SignupDto } from '../auth/dto/signup.dto'
-import mongoose from 'mongoose'
 import { customerReviewModel } from '../../models/customer-review.model'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { productModel } from '../../models/product.model'
+import mongoose from 'mongoose'
 
 @injectable()
 class UserRepository implements IUserRepository {
@@ -33,7 +33,7 @@ class UserRepository implements IUserRepository {
     return customerReviewModel.create(customerReviewDto)
   }
 
-  public async findAllCart(productsIds: string[]) {
+  public async findAllCart(productsIds: mongoose.Types.ObjectId[]) {
     return productModel.find({ _id: { $in: productsIds } }).lean()
   }
 }

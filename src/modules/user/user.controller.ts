@@ -8,6 +8,7 @@ import { IUserService } from './interfaces/user.service.interface'
 import { HttpError } from '../../exceptions/http-error.class'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
+import mongoose from 'mongoose'
 
 @injectable()
 class UserController extends BaseController implements IUserController {
@@ -75,7 +76,7 @@ class UserController extends BaseController implements IUserController {
   ): Promise<void> {
     try {
       const cartProducts = await this.userService.findAllCart(
-        req.query.productIds as unknown as string[]
+        req.query.productIds as unknown as mongoose.Types.ObjectId[]
       )
 
       res.json(cartProducts)

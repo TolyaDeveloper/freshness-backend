@@ -16,5 +16,7 @@ export interface IUserRepository {
   addCustomerReview: (
     customerReviewDto: CustomerReviewDto
   ) => Promise<CustomerReviewModelType>
-  findAllCart: (productIds: string[]) => Promise<ProductModelType[]>
+  findAllCart: (
+    productIds: mongoose.Types.ObjectId[]
+  ) => Promise<ProductModelType[]>
 }
