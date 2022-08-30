@@ -8,6 +8,7 @@ import { IUserService } from './interfaces/user.service.interface'
 import { HttpError } from '../../exceptions/http-error.class'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
+import { CartDto } from './dto/cart.dto'
 
 @injectable()
 class UserController extends BaseController implements IUserController {
@@ -27,6 +28,11 @@ class UserController extends BaseController implements IUserController {
         path: '/customers-reviews/add',
         func: this.addCustomerReview,
         middlewares: [new ValidateMiddleware(CustomerReviewDto)]
+      },
+      {
+        method: 'get',
+        path: '/cart',
+        func: this.findAllCart
       }
     ])
   }
@@ -59,6 +65,24 @@ class UserController extends BaseController implements IUserController {
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(500, err.message))
+      }
+    }
+  }
+
+  public async findAllCart(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const cartProducts = await this.userService.findAllCart(
+        req.query.productIds as unknown as string[]
+      )
+
+      res.json(cartProducts)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(404, err.message))
       }
     }
   }

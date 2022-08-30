@@ -5,6 +5,7 @@ import { SignupDto } from '../auth/dto/signup.dto'
 import mongoose from 'mongoose'
 import { customerReviewModel } from '../../models/customer-review.model'
 import { CustomerReviewDto } from './dto/customer-review.dto'
+import { productModel } from '../../models/product.model'
 
 @injectable()
 class UserRepository implements IUserRepository {
@@ -30,6 +31,10 @@ class UserRepository implements IUserRepository {
 
   public async addCustomerReview(customerReviewDto: CustomerReviewDto) {
     return customerReviewModel.create(customerReviewDto)
+  }
+
+  public async findAllCart(productsIds: string[]) {
+    return productModel.find({ _id: { $in: productsIds } }).lean()
   }
 }
 

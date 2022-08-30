@@ -17,6 +17,10 @@ class UserService implements IUserService {
   public async addCustomerReview(customerReviewDto: CustomerReviewDto) {
     return this.userRepository.addCustomerReview(customerReviewDto)
   }
+
+  public async findAllCart(productIds: string[]) {
+    return this.userRepository.findAllCart(productIds)
+  }
 }
 
 export { UserService }
