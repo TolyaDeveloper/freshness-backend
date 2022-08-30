@@ -12,4 +12,9 @@ export interface IUserController extends BaseController {
     res: Response,
     next: NextFunction
   ) => Promise<void>
+  findAllCart: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => Promise<void>
 }
