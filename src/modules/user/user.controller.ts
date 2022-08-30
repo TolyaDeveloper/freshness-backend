@@ -8,7 +8,6 @@ import { IUserService } from './interfaces/user.service.interface'
 import { HttpError } from '../../exceptions/http-error.class'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
-import { CartDto } from './dto/cart.dto'
 
 @injectable()
 class UserController extends BaseController implements IUserController {

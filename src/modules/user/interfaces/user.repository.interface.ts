@@ -2,8 +2,8 @@ import { UserModelType } from '../../../models/user.model'
 import { CustomerReviewModelType } from '../../../models/customer-review.model'
 import { SignupDto } from '../../auth/dto/signup.dto'
 import { CustomerReviewDto } from '../dto/customer-review.dto'
-import mongoose from 'mongoose'
 import { ProductModelType } from '../../../models/product.model'
+import mongoose from 'mongoose'
 
 export interface IUserRepository {
   findUserByEmail: (email: string) => Promise<UserModelType | null>
