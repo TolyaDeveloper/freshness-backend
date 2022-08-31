@@ -18,6 +18,10 @@ class ShopRepository implements IShopRepository {
     return categoryModel.create(category)
   }
 
+  public async findCategoryById(id: mongoose.Types.ObjectId) {
+    return categoryModel.findById(id).lean()
+  }
+
   public async createProduct(product: ProductDto) {
     return productModel.create(product)
   }
