@@ -28,12 +28,7 @@ class ShopService implements IShopService {
   }
 
   public async findProducts(queries: IFindProductsQueries) {
-    const category = await this.shopRepository.findCategoryById(
-      queries.category
-    )
-    const products = await this.shopRepository.findProducts(queries)
-
-    return { category, data: products }
+    return this.shopRepository.findProducts(queries)
   }
 
   public async findProductById(id: mongoose.Types.ObjectId) {

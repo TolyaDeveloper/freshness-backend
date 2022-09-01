@@ -10,10 +10,7 @@ export interface IShopService {
   findAllCategories: () => Promise<CategoryModelType[]>
   addCategory: (category: CategoryDto) => Promise<CategoryModelType>
   addProduct: (product: ProductDto) => Promise<ProductModelType>
-  findProducts: (queries: IFindProductsQueries) => Promise<{
-    data: ProductModelType[]
-    category: CategoryModelType | null
-  }>
+  findProducts: (queries: IFindProductsQueries) => Promise<ProductModelType[]>
   findProductById: (
     id: mongoose.Types.ObjectId
   ) => Promise<ProductModelType | null>
