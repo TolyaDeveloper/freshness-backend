@@ -6,17 +6,17 @@ import { ProductModelType } from '../../../models/product.model'
 import mongoose from 'mongoose'
 
 export interface IUserRepository {
-  findUserByEmail: (email: string) => Promise<UserModelType | null>
-  createUser: (credentials: SignupDto) => Promise<UserModelType>
-  findUserByActivationLink: (
+  findUserByEmail(email: string): Promise<UserModelType | null>
+  createUser(credentials: SignupDto): Promise<UserModelType>
+  findUserByActivationLink(
     activationLink: string
-  ) => Promise<(UserModelType & mongoose.Document) | null>
-  findUserById: (id: mongoose.Types.ObjectId) => Promise<UserModelType | null>
-  findCustomersReviews: () => Promise<CustomerReviewModelType[]>
-  addCustomerReview: (
+  ): Promise<(UserModelType & mongoose.Document) | null>
+  findUserById(id: mongoose.Types.ObjectId): Promise<UserModelType | null>
+  findCustomerReviews(): Promise<CustomerReviewModelType[]>
+  addCustomerReview(
     customerReviewDto: CustomerReviewDto
-  ) => Promise<CustomerReviewModelType>
-  findAllCart: (
+  ): Promise<CustomerReviewModelType>
+  findCartGoods(
     productIds: mongoose.Types.ObjectId[]
-  ) => Promise<ProductModelType[]>
+  ): Promise<ProductModelType[]>
 }

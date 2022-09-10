@@ -25,7 +25,7 @@ class UserRepository implements IUserRepository {
     return userModel.findById(id).lean()
   }
 
-  public async findCustomersReviews() {
+  public async findCustomerReviews() {
     return customerReviewModel.find().lean()
   }
 
@@ -33,7 +33,7 @@ class UserRepository implements IUserRepository {
     return customerReviewModel.create(customerReviewDto)
   }
 
-  public async findAllCart(productsIds: mongoose.Types.ObjectId[]) {
+  public async findCartGoods(productsIds: mongoose.Types.ObjectId[]) {
     return productModel.find({ _id: { $in: productsIds } }).lean()
   }
 }

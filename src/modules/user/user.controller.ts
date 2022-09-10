@@ -1,13 +1,14 @@
 import { inject, injectable } from 'inversify'
 import { Request, Response, NextFunction } from 'express'
+import { TYPES } from '../../types'
 import { BaseController } from '../../common/base.controller'
 import { ILoggerService } from '../../logger/logger.service.interface'
 import { IUserController } from './interfaces/user.controller.interface'
-import { TYPES } from '../../types'
 import { IUserService } from './interfaces/user.service.interface'
 import { HttpError } from '../../exceptions/http-error.class'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
+import { RoleMiddleware } from '../../common/role.middleware'
 import mongoose from 'mongoose'
 
 @injectable()
@@ -20,30 +21,33 @@ class UserController extends BaseController implements IUserController {
     this.bindRoutes([
       {
         method: 'get',
-        path: '/customers-reviews',
-        func: this.findCustomersReviews
+        path: '/customer-reviews',
+        func: this.findCustomerReviews
       },
       {
         method: 'post',
-        path: '/customers-reviews/add',
+        path: '/customer-reviews/add',
         func: this.addCustomerReview,
-        middlewares: [new ValidateMiddleware(CustomerReviewDto)]
+        middlewares: [
+          new RoleMiddleware(['ADMIN']),
+          new ValidateMiddleware(CustomerReviewDto)
+        ]
       },
       {
         method: 'get',
         path: '/cart',
-        func: this.findAllCart
+        func: this.findCartGoods
       }
     ])
   }
 
-  public async findCustomersReviews(
+  public async findCustomerReviews(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const customersReviews = await this.userService.findCustomersReviews()
+      const customersReviews = await this.userService.findCustomerReviews()
 
       res.json(customersReviews)
     } catch (err) {
@@ -69,13 +73,13 @@ class UserController extends BaseController implements IUserController {
     }
   }
 
-  public async findAllCart(
+  public async findCartGoods(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const cartProducts = await this.userService.findAllCart(
+      const cartProducts = await this.userService.findCartGoods(
         req.query.productIds as unknown as mongoose.Types.ObjectId[]
       )
 

@@ -3,11 +3,11 @@ import { IMiddleware } from './middleware.interface'
 
 export interface IRoute {
   path: string
-  func: (
+  func(
     req: Request<any, any, any, any>,
     res: Response,
     next: NextFunction
-  ) => void
+  ): void
   method: keyof Pick<Router, 'get' | 'post' | 'delete' | 'patch' | 'put'>
   middlewares?: IMiddleware[]
 }

@@ -1,4 +1,4 @@
 export interface IDatabaseService {
-  connect: () => Promise<void>
-  disconnect: () => Promise<void>
+  connect(): Promise<void>
+  disconnect(): Promise<void>
 }

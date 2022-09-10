@@ -1,11 +1,10 @@
 import { inject, injectable } from 'inversify'
 import { TYPES } from '../../types'
-import { CategoryModelType } from '../../models/category.model'
-import { CategoryDto } from './dto/category.dto'
 import { IShopRepository } from './interfaces/shop.repository.interface'
 import { IShopService } from './interfaces/shop.service.interface'
-import { ProductDto, IFindProductsQueries } from './dto/product.dto'
+import { CategoryDto } from './dto/category.dto'
 import { TagDto } from './dto/tag.dto'
+import { ProductDto, IFindProductsQueries } from './dto/product.dto'
 import mongoose from 'mongoose'
 
 @injectable()
@@ -15,16 +14,16 @@ class ShopService implements IShopService {
     private shopRepository: IShopRepository
   ) {}
 
-  public async findAllCategories(): Promise<CategoryModelType[]> {
-    return this.shopRepository.findAllCategories()
+  public async findCategories() {
+    return this.shopRepository.findCategories()
+  }
+
+  public async findCategoryById(id: mongoose.Types.ObjectId) {
+    return this.shopRepository.findCategoryById(id)
   }
 
   public async addCategory(category: CategoryDto) {
     return this.shopRepository.addCategory(category)
-  }
-
-  public async addProduct(product: ProductDto) {
-    return this.shopRepository.createProduct(product)
   }
 
   public async findProducts(queries: IFindProductsQueries) {
@@ -35,16 +34,20 @@ class ShopService implements IShopService {
     return this.shopRepository.findProductById(id)
   }
 
+  public async addProduct(product: ProductDto) {
+    return this.shopRepository.addProduct(product)
+  }
+
+  public async findTags() {
+    return this.shopRepository.findTags()
+  }
+
   public async findTagById(id: mongoose.Types.ObjectId) {
     return this.shopRepository.findTagById(id)
   }
 
   public async addTag(tag: TagDto) {
     return this.shopRepository.addTag(tag)
-  }
-
-  public async findAllTags() {
-    return this.shopRepository.findAllTags()
   }
 }
 

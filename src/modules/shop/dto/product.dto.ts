@@ -88,6 +88,7 @@ interface IFindProductsQueries {
   skip: number
   category: mongoose.Types.ObjectId
   tag: mongoose.Types.ObjectId
+  rating: number
 }
 
 export { ProductDto, IFindProductsQueries }

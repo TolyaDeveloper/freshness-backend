@@ -8,6 +8,7 @@ import { HttpError } from '../../exceptions/http-error.class'
 import { TYPES } from '../../types'
 import { IBlogService } from './interfaces/blog.service.interface'
 import { ValidateMiddleware } from '../../common/validate.middleware'
+import { RoleMiddleware } from '../../common/role.middleware'
 import mongoose from 'mongoose'
 
 @injectable()
@@ -19,10 +20,9 @@ class BlogController extends BaseController implements IBlogController {
 
     this.bindRoutes([
       {
-        method: 'post',
-        path: '/blog-posts/add',
-        func: this.addBlogPost,
-        middlewares: [new ValidateMiddleware(BlogPostDto)]
+        method: 'get',
+        path: '/blog-posts',
+        func: this.findBlogPosts
       },
       {
         method: 'get',
@@ -30,25 +30,35 @@ class BlogController extends BaseController implements IBlogController {
         func: this.findBlogPostById
       },
       {
-        method: 'get',
-        path: '/blog-posts',
-        func: this.findBlogPosts
+        method: 'post',
+        path: '/blog-posts/add',
+        func: this.addBlogPost,
+        middlewares: [
+          new RoleMiddleware(['ADMIN']),
+          new ValidateMiddleware(BlogPostDto)
+        ]
       }
     ])
   }
 
-  public async addBlogPost(
-    req: Request<{}, {}, BlogPostDto>,
+  public async findBlogPosts(
+    req: Request<{}, {}, {}, IBlogPostQueries>,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      await this.blogService.addBlogPost(req.body)
+      const { limit = 9, skip = 0, ...rest } = req.query
 
-      res.json({ message: 'Blog post has been added!' })
+      const blogPosts = await this.blogService.findBlogPosts({
+        limit,
+        skip,
+        ...rest
+      })
+
+      res.json(blogPosts)
     } catch (err) {
       if (err instanceof Error) {
-        return next(new HttpError(500, err.message))
+        return next(new HttpError(404, err.message))
       }
     }
   }
@@ -75,24 +85,18 @@ class BlogController extends BaseController implements IBlogController {
     }
   }
 
-  public async findBlogPosts(
-    req: Request<{}, {}, {}, IBlogPostQueries>,
+  public async addBlogPost(
+    req: Request<{}, {}, BlogPostDto>,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const { limit = 9, skip = 0, ...rest } = req.query
+      await this.blogService.addBlogPost(req.body)
 
-      const blogPosts = await this.blogService.findBlogPosts({
-        limit,
-        skip,
-        ...rest
-      })
-
-      res.json(blogPosts)
+      res.json({ message: 'Blog post has been added!' })
     } catch (err) {
       if (err instanceof Error) {
-        return next(new HttpError(404, err.message))
+        return next(new HttpError(500, err.message))
       }
     }
   }
