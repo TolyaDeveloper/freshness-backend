@@ -41,8 +41,7 @@ class RoleMiddleware implements IMiddleware {
       })
 
       if (!hasRole) {
-        // ? fix: status code should be 403
-        throw HttpError.Forbidden()
+        return next(new HttpError(403, 'Forbidden'))
       }
 
       next()
