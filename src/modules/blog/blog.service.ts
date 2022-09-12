@@ -12,8 +12,11 @@ class BlogService implements IBlogService {
     @inject(TYPES.BlogRepository) private blogRepository: IBlogRepository
   ) {}
 
-  public async addBlogPost(blogPost: BlogPostDto) {
-    return this.blogRepository.addBlogPost(blogPost)
+  public async addBlogPost(
+    blogPost: BlogPostDto,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.blogRepository.addBlogPost({ ...blogPost, createdBy: userId })
   }
 
   public async findBlogPostById(id: mongoose.Types.ObjectId) {

@@ -2,6 +2,7 @@ import { injectable } from 'inversify'
 import { BlogPostDto, IBlogPostQueries } from './dto/blog-post.dto'
 import { IBlogRepository } from './interfaces/blog.repository.interface'
 import { postModel } from '../../models/post.model'
+import { handleQueryObject } from '../../utils/handleQueryObject'
 import mongoose from 'mongoose'
 
 @injectable()
@@ -14,7 +15,10 @@ class BlogRepository implements IBlogRepository {
     return postModel
       .find({
         categories: rest.category,
-        createdAt: { $gte: startSearchFrom, $lte: endSearchBy }
+        createdAt: handleQueryObject({
+          $gte: startSearchFrom,
+          $lte: endSearchBy
+        })
       })
       .limit(limit)
       .skip(skip)

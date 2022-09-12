@@ -27,7 +27,11 @@ class RoleMiddleware implements IMiddleware {
         throw HttpError.Unathorized()
       }
 
-      const { roles: userRoles } = await this.tokenService.validateToken(
+      const {
+        roles: userRoles,
+        _id,
+        isActivated
+      } = await this.tokenService.validateToken(
         accessToken,
         this.configService.get('JWT_ACCESS_SECRET')
       )
@@ -43,6 +47,8 @@ class RoleMiddleware implements IMiddleware {
       if (!hasRole) {
         return next(new HttpError(403, 'Forbidden'))
       }
+
+      req.user = { roles: userRoles, _id, isActivated }
 
       next()
     } catch (err) {
