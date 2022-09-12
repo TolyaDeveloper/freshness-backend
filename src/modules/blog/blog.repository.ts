@@ -11,7 +11,6 @@ class BlogRepository implements IBlogRepository {
     startSearchFrom: Date | undefined,
     endSearchBy: Date | undefined
   ) {
-    console.log(rest)
     return postModel
       .find({
         categories: rest.category,
