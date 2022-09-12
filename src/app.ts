@@ -9,10 +9,10 @@ import { IExceptionFilter } from './exceptions/exception.filter.interface'
 import { IShopController } from './modules/shop/interfaces/shop.controller.interface'
 import { IAuthController } from './modules/auth/interfaces/auth.controller.interface'
 import { IUserController } from './modules/user/interfaces/user.controller.interface'
+import { IBlogController } from './modules/blog/interfaces/blog.controller.interface'
 import cors from 'cors'
 import helmet from 'helmet'
 import cookieParser from 'cookie-parser'
-import { IBlogController } from './modules/blog/interfaces/blog.controller.interface'
 
 @injectable()
 class App {

@@ -3,19 +3,15 @@ import { BaseController } from '../../../common/base.controller'
 import { IBlogPostQueries } from '../dto/blog-post.dto'
 
 export interface IBlogController extends BaseController {
-  addBlogPost: (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => Promise<void>
-  findBlogPostById: (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => Promise<void>
-  findBlogPosts: (
+  findBlogPosts(
     req: Request<{}, {}, {}, IBlogPostQueries>,
     res: Response,
     next: NextFunction
-  ) => Promise<void>
+  ): Promise<void>
+  findBlogPostById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  addBlogPost(req: Request, res: Response, next: NextFunction): Promise<void>
 }

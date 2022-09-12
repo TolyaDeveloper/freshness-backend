@@ -4,11 +4,11 @@ import { CustomerReviewDto } from '../dto/customer-review.dto'
 import mongoose from 'mongoose'
 
 export interface IUserService {
-  findCustomersReviews: () => Promise<CustomerReviewModelType[]>
-  addCustomerReview: (
+  findCustomerReviews(): Promise<CustomerReviewModelType[]>
+  addCustomerReview(
     customerReviewDto: CustomerReviewDto
-  ) => Promise<CustomerReviewModelType>
-  findAllCart: (
+  ): Promise<CustomerReviewModelType>
+  findCartGoods(
     productIds: mongoose.Types.ObjectId[]
-  ) => Promise<ProductModelType[]>
+  ): Promise<ProductModelType[]>
 }

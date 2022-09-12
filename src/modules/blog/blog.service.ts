@@ -3,6 +3,7 @@ import { TYPES } from '../../types'
 import { BlogPostDto, IBlogPostQueries } from './dto/blog-post.dto'
 import { IBlogRepository } from './interfaces/blog.repository.interface'
 import { IBlogService } from './interfaces/blog.service.interface'
+import { validateDate } from '../../utils/validateDate'
 import mongoose from 'mongoose'
 
 @injectable()
@@ -20,7 +21,20 @@ class BlogService implements IBlogService {
   }
 
   public async findBlogPosts(queries: IBlogPostQueries) {
-    return this.blogRepository.findBlogPosts(queries)
+    const dateFromQuery = new Date(queries.byDate)
+
+    const startSearchFrom = validateDate(
+      new Date(dateFromQuery.getFullYear(), dateFromQuery.getMonth(), 1)
+    )
+    const endSearchBy = validateDate(
+      new Date(dateFromQuery.getFullYear(), dateFromQuery.getMonth() + 1, 0)
+    )
+
+    return this.blogRepository.findBlogPosts(
+      queries,
+      startSearchFrom,
+      endSearchBy
+    )
   }
 }
 

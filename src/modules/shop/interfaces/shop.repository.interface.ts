@@ -7,17 +7,15 @@ import { TagDto } from '../dto/tag.dto'
 import mongoose from 'mongoose'
 
 export interface IShopRepository {
-  findAllCategories: () => Promise<CategoryModelType[]>
-  addCategory: (category: CategoryDto) => Promise<CategoryModelType>
-  findCategoryById: (
+  findCategories(): Promise<CategoryModelType[]>
+  findCategoryById(
     id: mongoose.Types.ObjectId
-  ) => Promise<CategoryModelType | null>
-  createProduct: (product: ProductDto) => Promise<ProductModelType>
-  findProducts: (queries: IFindProductsQueries) => Promise<ProductModelType[]>
-  findProductById: (
-    id: mongoose.Types.ObjectId
-  ) => Promise<ProductModelType | null>
-  findTagById: (id: mongoose.Types.ObjectId) => Promise<TagModelType | null>
-  addTag: (tag: TagDto) => Promise<TagModelType>
-  findAllTags: () => Promise<TagModelType[]>
+  ): Promise<CategoryModelType | null>
+  addCategory(category: CategoryDto): Promise<CategoryModelType>
+  findProducts(queries: IFindProductsQueries): Promise<ProductModelType[]>
+  findProductById(id: mongoose.Types.ObjectId): Promise<ProductModelType | null>
+  addProduct(product: ProductDto): Promise<ProductModelType>
+  findTags(): Promise<TagModelType[]>
+  findTagById(id: mongoose.Types.ObjectId): Promise<TagModelType | null>
+  addTag(tag: TagDto): Promise<TagModelType>
 }

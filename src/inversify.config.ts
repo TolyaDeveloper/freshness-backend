@@ -57,7 +57,6 @@ const bindings = new ContainerModule((bind: interfaces.Bind) => {
     .to(TokenRepository)
     .inSingletonScope()
   bind<IMailService>(TYPES.MailService).to(MailService)
-
   bind<IUserController>(TYPES.UserController).to(UserController)
   bind<IUserRepository>(TYPES.UserRepository).to(UserRepository)
   bind<IUserService>(TYPES.UserService).to(UserService)

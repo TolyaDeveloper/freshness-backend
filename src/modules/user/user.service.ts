@@ -11,16 +11,16 @@ class UserService implements IUserService {
     @inject(TYPES.UserRepository) private userRepository: IUserRepository
   ) {}
 
-  public async findCustomersReviews() {
-    return this.userRepository.findCustomersReviews()
+  public async findCustomerReviews() {
+    return this.userRepository.findCustomerReviews()
   }
 
   public async addCustomerReview(customerReviewDto: CustomerReviewDto) {
     return this.userRepository.addCustomerReview(customerReviewDto)
   }
 
-  public async findAllCart(productIds: mongoose.Types.ObjectId[]) {
-    return this.userRepository.findAllCart(productIds)
+  public async findCartGoods(productIds: mongoose.Types.ObjectId[]) {
+    return this.userRepository.findCartGoods(productIds)
   }
 }
 

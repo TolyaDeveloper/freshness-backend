@@ -14,7 +14,10 @@ class Database implements IDatabaseService {
 
   public async connect(): Promise<void> {
     try {
-      await mongoose.connect(this.configService.get('DATABASE_URI_DEVELOPMENT'))
+      await mongoose.connect(
+        this.configService.get('DATABASE_URI_DEVELOPMENT'),
+        { ignoreUndefined: true }
+      )
 
       this.logger.info('[Database] Connected successfully')
     } catch (err) {

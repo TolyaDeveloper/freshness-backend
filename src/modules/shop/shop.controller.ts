@@ -7,12 +7,11 @@ import { IShopController } from './interfaces/shop.controller.interface'
 import { IShopService } from './interfaces/shop.service.interface'
 import { ILoggerService } from '../../logger/logger.service.interface'
 import { CategoryDto } from './dto/category.dto'
+import { TagDto } from './dto/tag.dto'
 import { ProductDto, IFindProductsQueries } from './dto/product.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
-import { AuthMiddleware } from '../../common/auth.middleware'
 import { RoleMiddleware } from '../../common/role.middleware'
 import mongoose from 'mongoose'
-import { TagDto } from './dto/tag.dto'
 
 @injectable()
 class ShopController extends BaseController implements IShopController {
@@ -26,7 +25,12 @@ class ShopController extends BaseController implements IShopController {
       {
         method: 'get',
         path: '/categories',
-        func: this.findAllCategories
+        func: this.findCategories
+      },
+      {
+        method: 'get',
+        path: '/categories/:id',
+        func: this.findCategoryById
       },
       {
         method: 'post',
@@ -39,19 +43,27 @@ class ShopController extends BaseController implements IShopController {
       },
       {
         method: 'get',
-        path: '/products/:id',
-        func: this.findProductById
+        path: '/products',
+        func: this.findProducts
       },
       {
         method: 'get',
-        path: '/products',
-        func: this.findProducts
+        path: '/products/:id',
+        func: this.findProductById
       },
       {
         method: 'post',
         path: '/products/add',
         func: this.addProduct,
-        middlewares: [new ValidateMiddleware(ProductDto)]
+        middlewares: [
+          new RoleMiddleware(['ADMIN']),
+          new ValidateMiddleware(ProductDto)
+        ]
+      },
+      {
+        method: 'get',
+        path: '/tags',
+        func: this.findTags
       },
       {
         method: 'get',
@@ -62,25 +74,45 @@ class ShopController extends BaseController implements IShopController {
         method: 'post',
         path: '/tags/add',
         func: this.addTag,
-        middlewares: [new ValidateMiddleware(TagDto)]
-      },
-      {
-        method: 'get',
-        path: '/tags',
-        func: this.findAllTags
+        middlewares: [
+          new RoleMiddleware(['ADMIN']),
+          new ValidateMiddleware(TagDto)
+        ]
       }
     ])
   }
 
-  public async findAllCategories(
+  public async findCategories(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const categories = await this.shopService.findAllCategories()
+      const categories = await this.shopService.findCategories()
 
       res.json(categories)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(404, err.message))
+      }
+    }
+  }
+
+  public async findCategoryById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const category = await this.shopService.findCategoryById(
+        req.params.id as unknown as mongoose.Types.ObjectId
+      )
+
+      if (!category) {
+        throw HttpError.NotFound()
+      }
+
+      res.json(category)
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(404, err.message))
@@ -97,22 +129,6 @@ class ShopController extends BaseController implements IShopController {
       await this.shopService.addCategory(req.body)
 
       res.json({ message: 'New category has been created!' })
-    } catch (err) {
-      if (err instanceof Error) {
-        return next(new HttpError(500, err.message))
-      }
-    }
-  }
-
-  public async addProduct(
-    req: Request<{}, {}, ProductDto>,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      await this.shopService.addProduct(req.body)
-
-      res.json({ message: 'New product has been created!' })
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(500, err.message))
@@ -164,6 +180,38 @@ class ShopController extends BaseController implements IShopController {
     }
   }
 
+  public async addProduct(
+    req: Request<{}, {}, ProductDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      await this.shopService.addProduct(req.body)
+
+      res.json({ message: 'New product has been created!' })
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(500, err.message))
+      }
+    }
+  }
+
+  public async findTags(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const tags = await this.shopService.findTags()
+
+      res.json(tags)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(404, err.message))
+      }
+    }
+  }
+
   public async findTagById(
     req: Request,
     res: Response,
@@ -198,22 +246,6 @@ class ShopController extends BaseController implements IShopController {
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(500, err.message))
-      }
-    }
-  }
-
-  public async findAllTags(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const tags = await this.shopService.findAllTags()
-
-      res.json(tags)
-    } catch (err) {
-      if (err instanceof Error) {
-        return next(new HttpError(404, err.message))
       }
     }
   }
