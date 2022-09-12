@@ -3,9 +3,6 @@ import mongoose from 'mongoose'
 
 class BlogPostDto {
   @IsString()
-  public createdBy: string
-
-  @IsString()
   public title: string
 
   @IsString()
@@ -17,6 +14,8 @@ class BlogPostDto {
 
   @IsArray()
   public categories: string[]
+
+  public createdBy: mongoose.Types.ObjectId
 }
 
 interface IBlogPostQueries {

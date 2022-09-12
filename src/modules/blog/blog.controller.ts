@@ -91,7 +91,7 @@ class BlogController extends BaseController implements IBlogController {
     next: NextFunction
   ): Promise<void> {
     try {
-      await this.blogService.addBlogPost(req.body)
+      await this.blogService.addBlogPost(req.body, req.user._id)
 
       res.json({ message: 'Blog post has been added!' })
     } catch (err) {
