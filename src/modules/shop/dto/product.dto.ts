@@ -16,6 +16,9 @@ class ProductDto {
   public title: string
 
   @IsString()
+  public brand: string
+
+  @IsString()
   @IsOptional()
   public imageUri: string
 

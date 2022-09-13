@@ -15,6 +15,11 @@ export interface IShopController extends BaseController {
     res: Response,
     next: NextFunction
   ): Promise<void>
+  gatherCategoryFilters(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
   findProductById(
     req: Request,
     res: Response,

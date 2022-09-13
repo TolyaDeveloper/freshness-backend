@@ -18,6 +18,10 @@ class ShopService implements IShopService {
     return this.shopRepository.findCategories()
   }
 
+  public async gatherCategoryFilters() {
+    return this.shopRepository.gatherCategoryFilters()
+  }
+
   public async findCategoryById(id: mongoose.Types.ObjectId) {
     return this.shopRepository.findCategoryById(id)
   }

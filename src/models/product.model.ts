@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 
 const productSchema = new mongoose.Schema({
   title: { type: String, required: true },
+  brand: { type: String, required: true },
   imageUri: { type: String, default: PATH_TO_IMAGES.NO_PRODUCT_THUMBNAIL },
   description: { type: String, required: true },
   smallDescription: { type: String, required: true },

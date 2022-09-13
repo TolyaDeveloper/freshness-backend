@@ -48,6 +48,11 @@ class ShopController extends BaseController implements IShopController {
       },
       {
         method: 'get',
+        path: '/products/filters',
+        func: this.gatherCategoryFilters
+      },
+      {
+        method: 'get',
         path: '/products/:id',
         func: this.findProductById
       },
@@ -151,6 +156,22 @@ class ShopController extends BaseController implements IShopController {
       })
 
       res.json(products)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(404, err.message))
+      }
+    }
+  }
+
+  public async gatherCategoryFilters(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const result = await this.shopService.gatherCategoryFilters()
+
+      res.json(result)
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(404, err.message))

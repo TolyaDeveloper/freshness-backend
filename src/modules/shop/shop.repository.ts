@@ -7,11 +7,66 @@ import { CategoryDto } from './dto/category.dto'
 import { TagDto } from './dto/tag.dto'
 import { ProductDto, IFindProductsQueries } from './dto/product.dto'
 import mongoose from 'mongoose'
+import { brandModel } from '../../models/brand.model'
 
 @injectable()
 class ShopRepository implements IShopRepository {
   public async findCategories() {
     return categoryModel.find().lean()
+  }
+
+  public async gatherCategoryFilters() {
+    const categories = await productModel.aggregate([
+      {
+        $unwind: {
+          path: '$categories'
+        }
+      },
+      {
+        $group: {
+          _id: '$categories',
+          total: {
+            $sum: 1
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'categories',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'category'
+        }
+      },
+      {
+        $unwind: {
+          path: '$category'
+        }
+      }
+    ])
+
+    const [minMaxPrices] = await productModel.aggregate([
+      {
+        $match: {
+          categories: {
+            $eq: new mongoose.Types.ObjectId('62f15759ce013e411167b099')
+          }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          minPrice: {
+            $min: '$price'
+          },
+          maxPrice: {
+            $max: '$price'
+          }
+        }
+      }
+    ])
+
+    return { categories, minMaxPrices }
   }
 
   public async findCategoryById(id: mongoose.Types.ObjectId) {
