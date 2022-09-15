@@ -3,15 +3,19 @@ import { inject, injectable } from 'inversify'
 import { TYPES } from '../../types'
 import { BaseController } from '../../common/base.controller'
 import { HttpError } from '../../exceptions/http-error.class'
-import { IShopController } from './interfaces/shop.controller.interface'
+import {
+  IShopController,
+  IGatherCategoryFiltersQueries,
+  IFindByIdParams,
+  IFindProductsQueries
+} from './interfaces/shop.controller.interface'
 import { IShopService } from './interfaces/shop.service.interface'
 import { ILoggerService } from '../../logger/logger.service.interface'
 import { CategoryDto } from './dto/category.dto'
 import { TagDto } from './dto/tag.dto'
-import { ProductDto, IFindProductsQueries } from './dto/product.dto'
+import { ProductDto } from './dto/product.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
 import { RoleMiddleware } from '../../common/role.middleware'
-import mongoose from 'mongoose'
 
 @injectable()
 class ShopController extends BaseController implements IShopController {
@@ -104,14 +108,12 @@ class ShopController extends BaseController implements IShopController {
   }
 
   public async findCategoryById(
-    req: Request,
+    req: Request<IFindByIdParams>,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const category = await this.shopService.findCategoryById(
-        req.params.id as unknown as mongoose.Types.ObjectId
-      )
+      const category = await this.shopService.findCategoryById(req.params.id)
 
       if (!category) {
         throw HttpError.NotFound()
@@ -164,12 +166,12 @@ class ShopController extends BaseController implements IShopController {
   }
 
   public async gatherCategoryFilters(
-    req: Request,
+    { query }: Request<{}, {}, {}, IGatherCategoryFiltersQueries>,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const result = await this.shopService.gatherCategoryFilters()
+      const result = await this.shopService.gatherCategoryFilters(query)
 
       res.json(result)
     } catch (err) {
@@ -180,14 +182,12 @@ class ShopController extends BaseController implements IShopController {
   }
 
   public async findProductById(
-    req: Request,
+    req: Request<IFindByIdParams>,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const product = await this.shopService.findProductById(
-        req.params.id as unknown as mongoose.Types.ObjectId
-      )
+      const product = await this.shopService.findProductById(req.params.id)
 
       if (!product) {
         throw HttpError.NotFound()
@@ -234,14 +234,12 @@ class ShopController extends BaseController implements IShopController {
   }
 
   public async findTagById(
-    req: Request,
+    req: Request<IFindByIdParams>,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const tag = await this.shopService.findTagById(
-        req.params.id as unknown as mongoose.Types.ObjectId
-      )
+      const tag = await this.shopService.findTagById(req.params.id)
 
       if (!tag) {
         throw HttpError.NotFound()

@@ -13,6 +13,7 @@ import { ITokens } from '../../interfaces/token.interface'
 import { IMailService } from '../../services/mail/interfaces/mail.service.inerface'
 import { UserModelType } from '../../models/user.model'
 import { IAuthRepository } from './interfaces/auth.repository.interface'
+import mongoose from 'mongoose'
 
 @injectable()
 class AuthService implements IAuthService {
@@ -97,8 +98,8 @@ class AuthService implements IAuthService {
     return tokens
   }
 
-  public async activate(link: string): Promise<void> {
-    const user = await this.userRepository.findUserByActivationLink(link)
+  public async activate(id: mongoose.Types.ObjectId): Promise<void> {
+    const user = await this.userRepository.findUserByActivationLink(id)
 
     if (!user) {
       throw HttpError.ACCOUNT_ACTIVATION_FAILED()

@@ -4,7 +4,11 @@ import { IShopRepository } from './interfaces/shop.repository.interface'
 import { IShopService } from './interfaces/shop.service.interface'
 import { CategoryDto } from './dto/category.dto'
 import { TagDto } from './dto/tag.dto'
-import { ProductDto, IFindProductsQueries } from './dto/product.dto'
+import { ProductDto } from './dto/product.dto'
+import {
+  IGatherCategoryFiltersQueries,
+  IFindProductsQueries
+} from './interfaces/shop.controller.interface'
 import mongoose from 'mongoose'
 
 @injectable()
@@ -18,8 +22,8 @@ class ShopService implements IShopService {
     return this.shopRepository.findCategories()
   }
 
-  public async gatherCategoryFilters() {
-    return this.shopRepository.gatherCategoryFilters()
+  public async gatherCategoryFilters(queries: IGatherCategoryFiltersQueries) {
+    return this.shopRepository.gatherCategoryFilters(queries)
   }
 
   public async findCategoryById(id: mongoose.Types.ObjectId) {

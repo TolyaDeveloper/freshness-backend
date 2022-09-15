@@ -1,5 +1,6 @@
 import { injectable } from 'inversify'
-import { BlogPostDto, IBlogPostQueries } from './dto/blog-post.dto'
+import { BlogPostDto } from './dto/blog-post.dto'
+import { IBlogPostQueries } from './interfaces/blog.controller.interface'
 import { IBlogRepository } from './interfaces/blog.repository.interface'
 import { postModel } from '../../models/post.model'
 import { handleQueryObject } from '../../utils/handleQueryObject'

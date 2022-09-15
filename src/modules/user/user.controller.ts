@@ -3,13 +3,15 @@ import { Request, Response, NextFunction } from 'express'
 import { TYPES } from '../../types'
 import { BaseController } from '../../common/base.controller'
 import { ILoggerService } from '../../logger/logger.service.interface'
-import { IUserController } from './interfaces/user.controller.interface'
+import {
+  IUserController,
+  IFindCartGoodsQueries
+} from './interfaces/user.controller.interface'
 import { IUserService } from './interfaces/user.service.interface'
 import { HttpError } from '../../exceptions/http-error.class'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
 import { RoleMiddleware } from '../../common/role.middleware'
-import mongoose from 'mongoose'
 
 @injectable()
 class UserController extends BaseController implements IUserController {
@@ -74,13 +76,13 @@ class UserController extends BaseController implements IUserController {
   }
 
   public async findCartGoods(
-    req: Request,
+    req: Request<{}, {}, {}, IFindCartGoodsQueries>,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
       const cartProducts = await this.userService.findCartGoods(
-        req.query.productIds as unknown as mongoose.Types.ObjectId[]
+        req.query.productIds
       )
 
       res.json(cartProducts)

@@ -1,8 +1,12 @@
 import { type CategoryModelType } from '../../../models/category.model'
-import { ProductModelType } from '../../../models/product.model'
-import { TagModelType } from '../../../models/tag.model'
+import { type ProductModelType } from '../../../models/product.model'
+import { type TagModelType } from '../../../models/tag.model'
 import { CategoryDto } from '../dto/category.dto'
-import { ProductDto, IFindProductsQueries } from '../dto/product.dto'
+import { ProductDto } from '../dto/product.dto'
+import {
+  IGatherCategoryFiltersQueries,
+  IFindProductsQueries
+} from './shop.controller.interface'
 import { TagDto } from '../dto/tag.dto'
 import mongoose from 'mongoose'
 
@@ -13,7 +17,9 @@ export interface IShopRepository {
   ): Promise<CategoryModelType | null>
   addCategory(category: CategoryDto): Promise<CategoryModelType>
   findProducts(queries: IFindProductsQueries): Promise<ProductModelType[]>
-  gatherCategoryFilters(): Promise<{ categories: any[]; minMaxPrices: any[] }>
+  gatherCategoryFilters(
+    queries: IGatherCategoryFiltersQueries
+  ): Promise<{ categories: any[]; minMaxPrices: any[] }>
   findProductById(id: mongoose.Types.ObjectId): Promise<ProductModelType | null>
   addProduct(product: ProductDto): Promise<ProductModelType>
   findTags(): Promise<TagModelType[]>

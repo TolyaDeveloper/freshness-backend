@@ -5,9 +5,13 @@ import { tagModel } from '../../models/tag.model'
 import { IShopRepository } from './interfaces/shop.repository.interface'
 import { CategoryDto } from './dto/category.dto'
 import { TagDto } from './dto/tag.dto'
-import { ProductDto, IFindProductsQueries } from './dto/product.dto'
-import mongoose from 'mongoose'
+import { ProductDto } from './dto/product.dto'
+import {
+  IGatherCategoryFiltersQueries,
+  IFindProductsQueries
+} from './interfaces/shop.controller.interface'
 import { brandModel } from '../../models/brand.model'
+import mongoose from 'mongoose'
 
 @injectable()
 class ShopRepository implements IShopRepository {
@@ -15,7 +19,9 @@ class ShopRepository implements IShopRepository {
     return categoryModel.find().lean()
   }
 
-  public async gatherCategoryFilters() {
+  public async gatherCategoryFilters({
+    category
+  }: IGatherCategoryFiltersQueries) {
     const categories = await productModel.aggregate([
       {
         $unwind: {
@@ -49,7 +55,7 @@ class ShopRepository implements IShopRepository {
       {
         $match: {
           categories: {
-            $eq: new mongoose.Types.ObjectId('62f15759ce013e411167b099')
+            $eq: new mongoose.Types.ObjectId(category)
           }
         }
       },

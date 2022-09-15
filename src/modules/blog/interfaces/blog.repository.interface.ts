@@ -1,4 +1,5 @@
-import { BlogPostDto, IBlogPostQueries } from '../dto/blog-post.dto'
+import { BlogPostDto } from '../dto/blog-post.dto'
+import { IBlogPostQueries } from './blog.controller.interface'
 import { PostModelType } from '../../../models/post.model'
 import mongoose from 'mongoose'
 

@@ -1,6 +1,17 @@
 import { NextFunction, Request, Response } from 'express'
 import { BaseController } from '../../../common/base.controller'
-import { IBlogPostQueries } from '../dto/blog-post.dto'
+import mongoose from 'mongoose'
+
+export interface IFindByIdParams {
+  id: mongoose.Types.ObjectId
+}
+
+export interface IBlogPostQueries {
+  limit: number
+  skip: number
+  category: mongoose.Types.ObjectId
+  byDate: Date
+}
 
 export interface IBlogController extends BaseController {
   findBlogPosts(
@@ -9,7 +20,7 @@ export interface IBlogController extends BaseController {
     next: NextFunction
   ): Promise<void>
   findBlogPostById(
-    req: Request,
+    req: Request<IFindByIdParams>,
     res: Response,
     next: NextFunction
   ): Promise<void>

@@ -17,7 +17,9 @@ class UserRepository implements IUserRepository {
     return userModel.create(credentials)
   }
 
-  public async findUserByActivationLink(activationLink: string) {
+  public async findUserByActivationLink(
+    activationLink: mongoose.Types.ObjectId
+  ) {
     return userModel.findOne({ activationLink })
   }
 

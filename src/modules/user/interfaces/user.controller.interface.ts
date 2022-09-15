@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import { BaseController } from '../../../common/base.controller'
+import mongoose from 'mongoose'
+
+export interface IFindCartGoodsQueries {
+  productIds: mongoose.Types.ObjectId[]
+}
 
 export interface IUserController extends BaseController {
   findCustomerReviews(
@@ -12,5 +17,9 @@ export interface IUserController extends BaseController {
     res: Response,
     next: NextFunction
   ): Promise<void>
-  findCartGoods(req: Request, res: Response, next: NextFunction): Promise<void>
+  findCartGoods(
+    req: Request<{}, {}, {}, IFindCartGoodsQueries>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
 }
