@@ -45,13 +45,16 @@ class ShopRepository implements IShopRepository {
         }
       },
       {
+        $unset: '_id'
+      },
+      {
         $unwind: {
           path: '$category'
         }
       }
     ])
 
-    const [minMaxPrices] = await productModel.aggregate([
+    const [filters] = await productModel.aggregate([
       {
         $match: {
           categories: {
@@ -60,19 +63,56 @@ class ShopRepository implements IShopRepository {
         }
       },
       {
-        $group: {
-          _id: null,
-          minPrice: {
-            $min: '$price'
-          },
-          maxPrice: {
-            $max: '$price'
-          }
+        $facet: {
+          minMaxPrices: [
+            {
+              $group: {
+                _id: null,
+                minPrice: {
+                  $min: '$price'
+                },
+                maxPrice: {
+                  $max: '$price'
+                }
+              }
+            }
+          ],
+          brands: [
+            { $group: { _id: '$brand' } },
+            {
+              $lookup: {
+                from: 'brands',
+                localField: '_id',
+                foreignField: '_id',
+                as: 'brand'
+              }
+            },
+            {
+              $unset: '_id'
+            },
+            { $unwind: '$brand' }
+          ],
+          countries: [
+            {
+              $unwind: {
+                path: '$deliveryArea'
+              }
+            },
+            {
+              $group: {
+                _id: '$deliveryArea',
+                total: {
+                  $sum: 1
+                }
+              }
+            },
+            { $project: { _id: 0, country: '$_id', total: 1 } }
+          ]
         }
       }
     ])
 
-    return { categories, minMaxPrices }
+    return { categories, filters }
   }
 
   public async findCategoryById(id: mongoose.Types.ObjectId) {

@@ -17,9 +17,7 @@ export interface IShopRepository {
   ): Promise<CategoryModelType | null>
   addCategory(category: CategoryDto): Promise<CategoryModelType>
   findProducts(queries: IFindProductsQueries): Promise<ProductModelType[]>
-  gatherCategoryFilters(
-    queries: IGatherCategoryFiltersQueries
-  ): Promise<{ categories: any[]; minMaxPrices: any[] }>
+  gatherCategoryFilters(queries: IGatherCategoryFiltersQueries): Promise<any>
   findProductById(id: mongoose.Types.ObjectId): Promise<ProductModelType | null>
   addProduct(product: ProductDto): Promise<ProductModelType>
   findTags(): Promise<TagModelType[]>
