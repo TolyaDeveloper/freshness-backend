@@ -10,6 +10,8 @@ import {
   IsBoolean
 } from 'class-validator'
 
+import { ProductModelBiologyEnum } from '../../../models/product.model'
+
 class ProductDto {
   @IsString()
   public title: string
@@ -59,6 +61,9 @@ class ProductDto {
 
   @IsString()
   public farm: string
+
+  @IsString()
+  public biology: ProductModelBiologyEnum
 
   @IsString()
   public buyBy: string

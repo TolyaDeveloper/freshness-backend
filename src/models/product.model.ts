@@ -1,6 +1,11 @@
 import { PATH_TO_IMAGES } from '../constants/common'
 import mongoose from 'mongoose'
 
+enum ProductModelBiologyEnum {
+  Bio = 'Bio',
+  Farm = 'Farm'
+}
+
 const productSchema = new mongoose.Schema({
   title: { type: String, required: true },
   brand: { ref: 'User', type: mongoose.Schema.Types.ObjectId },
@@ -36,6 +41,7 @@ const productSchema = new mongoose.Schema({
     }
   ],
   farm: { type: String, required: true },
+  biology: { type: String, enum: ProductModelBiologyEnum, required: true },
   buyBy: { type: String, required: true },
   freshness: { type: String, required: true },
   inStock: { type: Boolean, required: true },
@@ -51,4 +57,4 @@ type ProductModelType = mongoose.InferSchemaType<typeof productSchema> & {
   _id: mongoose.Types.ObjectId
 }
 
-export { productModel, ProductModelType }
+export { productModel, ProductModelType, ProductModelBiologyEnum }

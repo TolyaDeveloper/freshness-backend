@@ -1,6 +1,9 @@
 import { injectable } from 'inversify'
 import { categoryModel } from '../../models/category.model'
-import { productModel } from '../../models/product.model'
+import {
+  productModel,
+  ProductModelBiologyEnum
+} from '../../models/product.model'
 import { tagModel } from '../../models/tag.model'
 import { IShopRepository } from './interfaces/shop.repository.interface'
 import { CategoryDto } from './dto/category.dto'
@@ -107,7 +110,16 @@ class ShopRepository implements IShopRepository {
               }
             },
             { $project: { _id: 0, country: '$_id', total: 1 } }
-          ]
+          ],
+          farmCount: [
+            { $match: { biology: ProductModelBiologyEnum.Farm } },
+            { $count: 'total' }
+          ],
+          bioCount: [
+            { $match: { biology: ProductModelBiologyEnum.Bio } },
+            { $count: 'total' }
+          ],
+          totalCategoryProducts: [{ $count: 'total' }]
         }
       }
     ])
