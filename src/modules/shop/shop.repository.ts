@@ -5,7 +5,10 @@ import {
   ProductModelBiologyEnum
 } from '../../models/product.model'
 import { tagModel } from '../../models/tag.model'
-import { IShopRepository } from './interfaces/shop.repository.interface'
+import {
+  IShopRepository,
+  IGatherCategoryFilters
+} from './interfaces/shop.repository.interface'
 import { CategoryDto } from './dto/category.dto'
 import { TagDto } from './dto/tag.dto'
 import { ProductDto } from './dto/product.dto'
@@ -13,7 +16,6 @@ import {
   IGatherCategoryFiltersQueries,
   IFindProductsQueries
 } from './interfaces/shop.controller.interface'
-import { brandModel } from '../../models/brand.model'
 import mongoose from 'mongoose'
 
 @injectable()
@@ -24,7 +26,7 @@ class ShopRepository implements IShopRepository {
 
   public async gatherCategoryFilters({
     category
-  }: IGatherCategoryFiltersQueries) {
+  }: IGatherCategoryFiltersQueries): Promise<IGatherCategoryFilters> {
     const categories = await productModel.aggregate([
       {
         $unwind: {

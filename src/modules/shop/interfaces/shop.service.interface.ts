@@ -10,6 +10,18 @@ import {
 import { TagDto } from '../dto/tag.dto'
 import mongoose from 'mongoose'
 
+export interface IGatherCategoryFilters {
+  categories: { total: number; category: CategoryModelType }[]
+  filters: {
+    minMaxPrices: [{ _id: null; minPrice: number; maxPrice: number }] | []
+    brands: { brand: { _id: mongoose.Types.ObjectId; name: string } }[]
+    countries: { total: number; country: string }[]
+    farmCount: [{ total: number }] | []
+    bioCount: [{ total: number }] | []
+    totalCategoryProducts: [{ total: number }] | []
+  }
+}
+
 export interface IShopService {
   findCategories(): Promise<CategoryModelType[]>
   findCategoryById(
@@ -19,7 +31,7 @@ export interface IShopService {
   findProducts(queries: IFindProductsQueries): Promise<ProductModelType[]>
   gatherCategoryFilters(
     queries: IGatherCategoryFiltersQueries
-  ): Promise<{ categories: any[]; minMaxPrices: any[] }>
+  ): Promise<IGatherCategoryFilters>
   findProductById(id: mongoose.Types.ObjectId): Promise<ProductModelType | null>
   addProduct(product: ProductDto): Promise<ProductModelType>
   findTags(): Promise<TagModelType[]>
