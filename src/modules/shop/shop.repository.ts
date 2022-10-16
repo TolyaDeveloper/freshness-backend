@@ -16,6 +16,7 @@ import {
   IGatherCategoryFiltersQueries,
   IFindProductsQueries
 } from './interfaces/shop.controller.interface'
+import { handleQueryObject } from '../../utils/handleQueryObject'
 import mongoose from 'mongoose'
 
 @injectable()
@@ -142,7 +143,10 @@ class ShopRepository implements IShopRepository {
       .find({
         categories: rest.category,
         tags: rest.tag,
-        rating: rest.rating
+        rating: handleQueryObject({ $in: rest.rating }),
+        biology: handleQueryObject({ $in: rest.biology }),
+        price: handleQueryObject({ $gte: rest.minPrice, $lte: rest.maxPrice }),
+        deliveryArea: rest.country
       })
       .limit(limit)
       .skip(skip)

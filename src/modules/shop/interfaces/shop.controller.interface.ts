@@ -10,12 +10,28 @@ export interface IGatherCategoryFiltersQueries {
   category: mongoose.Types.ObjectId
 }
 
+export interface IQueries {
+  priceType: string[]
+  biology: string[]
+  country: string[]
+  brands: string[]
+  rating: string[]
+  minPrice: number[]
+  maxPrice: number[]
+}
+
 export interface IFindProductsQueries {
   limit: number
   skip: number
   category: mongoose.Types.ObjectId
   tag: mongoose.Types.ObjectId
-  rating: number
+  priceType: string[]
+  biology: string[]
+  country: string[]
+  brands: string[]
+  rating: string[]
+  minPrice: number[]
+  maxPrice: number[]
 }
 
 export interface IShopController extends BaseController {
