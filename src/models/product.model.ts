@@ -8,7 +8,6 @@ enum ProductModelBiologyEnum {
 
 const productSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  brand: { ref: 'User', type: mongoose.Schema.Types.ObjectId },
   imageUri: { type: String, default: PATH_TO_IMAGES.NO_PRODUCT_THUMBNAIL },
   description: { type: String, required: true },
   smallDescription: { type: String, required: true },

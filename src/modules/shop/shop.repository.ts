@@ -17,6 +17,7 @@ import {
   IFindProductsQueries
 } from './interfaces/shop.controller.interface'
 import { handleQueryObject } from '../../utils/handleQueryObject'
+import { PriceTypeSortEnum } from './shop.variables'
 import mongoose from 'mongoose'
 
 @injectable()
@@ -83,21 +84,6 @@ class ShopRepository implements IShopRepository {
               }
             }
           ],
-          brands: [
-            { $group: { _id: '$brand' } },
-            {
-              $lookup: {
-                from: 'brands',
-                localField: '_id',
-                foreignField: '_id',
-                as: 'brand'
-              }
-            },
-            {
-              $unset: '_id'
-            },
-            { $unwind: '$brand' }
-          ],
           countries: [
             {
               $unwind: {
@@ -139,6 +125,16 @@ class ShopRepository implements IShopRepository {
   }
 
   public async findProducts({ limit, skip, ...rest }: IFindProductsQueries) {
+    let sortQuery = {}
+
+    switch (rest.priceType) {
+      case PriceTypeSortEnum.CHEAPEST:
+        sortQuery = { price: 1 }
+        break
+      case PriceTypeSortEnum.MOST_POPULAR:
+        sortQuery = { rating: -1 }
+    }
+
     return productModel
       .find({
         categories: rest.category,
@@ -148,8 +144,9 @@ class ShopRepository implements IShopRepository {
         price: handleQueryObject({ $gte: rest.minPrice, $lte: rest.maxPrice }),
         deliveryArea: rest.country
       })
-      .limit(limit)
       .skip(skip)
+      .limit(limit)
+      .sort(sortQuery)
       .lean()
   }
 

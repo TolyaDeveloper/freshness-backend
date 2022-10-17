@@ -14,7 +14,6 @@ export interface IGatherCategoryFilters {
   categories: { total: number; category: CategoryModelType }[]
   filters: {
     minMaxPrices: [{ _id: null; minPrice: number; maxPrice: number }] | []
-    brands: { brand: { _id: mongoose.Types.ObjectId; name: string } }[]
     countries: { total: number; country: string }[]
     farmCount: [{ total: number }] | []
     bioCount: [{ total: number }] | []

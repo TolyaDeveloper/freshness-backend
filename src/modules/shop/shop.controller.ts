@@ -151,8 +151,6 @@ class ShopController extends BaseController implements IShopController {
     try {
       const { limit = 9, skip = 0, ...rest } = req.query
 
-      console.log(rest)
-
       const products = await this.shopService.findProducts({
         limit,
         skip,
