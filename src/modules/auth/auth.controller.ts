@@ -1,7 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import { inject, injectable } from 'inversify'
 import { BaseController } from '../../common/base.controller'
-import { IAuthController } from './interfaces/auth.controller.interface'
+import {
+  IAuthController,
+  IActivateParams
+} from './interfaces/auth.controller.interface'
 import { ILoggerService } from '../../logger/logger.service.interface'
 import { LoginDto } from './dto/login.dto'
 import { SignupDto } from './dto/signup.dto'
@@ -33,7 +36,7 @@ class AuthController extends BaseController implements IAuthController {
         middlewares: [new ValidateMiddleware(LoginDto)]
       },
       { method: 'post', path: '/auth/logout', func: this.logout },
-      { method: 'get', path: '/auth/activate/:link', func: this.activate },
+      { method: 'get', path: '/auth/activate/:id', func: this.activate },
       { method: 'get', path: '/auth/refresh', func: this.refresh }
     ])
   }
@@ -79,12 +82,12 @@ class AuthController extends BaseController implements IAuthController {
   }
 
   public async activate(
-    req: Request,
+    req: Request<IActivateParams>,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      await this.authService.activate(req.params.link)
+      await this.authService.activate(req.params.id)
 
       res.send('Account activated successfully!')
     } catch (err) {

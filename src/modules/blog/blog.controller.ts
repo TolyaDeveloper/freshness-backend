@@ -2,14 +2,17 @@ import { NextFunction, Request, Response } from 'express'
 import { inject, injectable } from 'inversify'
 import { BaseController } from '../../common/base.controller'
 import { ILoggerService } from '../../logger/logger.service.interface'
-import { IBlogController } from './interfaces/blog.controller.interface'
-import { BlogPostDto, IBlogPostQueries } from './dto/blog-post.dto'
+import {
+  IBlogController,
+  IBlogPostQueries,
+  IFindByIdParams
+} from './interfaces/blog.controller.interface'
+import { BlogPostDto } from './dto/blog-post.dto'
 import { HttpError } from '../../exceptions/http-error.class'
 import { TYPES } from '../../types'
 import { IBlogService } from './interfaces/blog.service.interface'
 import { ValidateMiddleware } from '../../common/validate.middleware'
 import { RoleMiddleware } from '../../common/role.middleware'
-import mongoose from 'mongoose'
 
 @injectable()
 class BlogController extends BaseController implements IBlogController {
@@ -64,14 +67,12 @@ class BlogController extends BaseController implements IBlogController {
   }
 
   public async findBlogPostById(
-    req: Request,
+    req: Request<IFindByIdParams>,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const blogPost = await this.blogService.findBlogPostById(
-        req.params.id as unknown as mongoose.Types.ObjectId
-      )
+      const blogPost = await this.blogService.findBlogPostById(req.params.id)
 
       if (!blogPost) {
         throw HttpError.NotFound()

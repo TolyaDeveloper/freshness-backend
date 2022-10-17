@@ -1,8 +1,9 @@
 import { inject, injectable } from 'inversify'
 import { TYPES } from '../../types'
-import { BlogPostDto, IBlogPostQueries } from './dto/blog-post.dto'
-import { IBlogRepository } from './interfaces/blog.repository.interface'
+import { BlogPostDto } from './dto/blog-post.dto'
+import { IBlogPostQueries } from './interfaces/blog.controller.interface'
 import { IBlogService } from './interfaces/blog.service.interface'
+import { IBlogRepository } from './interfaces/blog.repository.interface'
 import { validateDate } from '../../utils/validateDate'
 import mongoose from 'mongoose'
 

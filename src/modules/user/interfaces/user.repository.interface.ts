@@ -9,7 +9,7 @@ export interface IUserRepository {
   findUserByEmail(email: string): Promise<UserModelType | null>
   createUser(credentials: SignupDto): Promise<UserModelType>
   findUserByActivationLink(
-    activationLink: string
+    id: mongoose.Types.ObjectId
   ): Promise<(UserModelType & mongoose.Document) | null>
   findUserById(id: mongoose.Types.ObjectId): Promise<UserModelType | null>
   findCustomerReviews(): Promise<CustomerReviewModelType[]>

@@ -18,11 +18,4 @@ class BlogPostDto {
   public createdBy: mongoose.Types.ObjectId
 }
 
-interface IBlogPostQueries {
-  limit: number
-  skip: number
-  category: mongoose.Types.ObjectId
-  byDate: Date
-}
-
-export { BlogPostDto, IBlogPostQueries }
+export { BlogPostDto }

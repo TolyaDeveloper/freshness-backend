@@ -9,7 +9,8 @@ import {
   IsNotEmptyObject,
   IsBoolean
 } from 'class-validator'
-import mongoose from 'mongoose'
+
+import { ProductModelBiologyEnum } from '../../../models/product.model'
 
 class ProductDto {
   @IsString()
@@ -59,6 +60,9 @@ class ProductDto {
   public farm: string
 
   @IsString()
+  public biology: ProductModelBiologyEnum
+
+  @IsString()
   public buyBy: string
 
   @IsString()
@@ -83,12 +87,4 @@ class ProductDto {
   public questions: any[]
 }
 
-interface IFindProductsQueries {
-  limit: number
-  skip: number
-  category: mongoose.Types.ObjectId
-  tag: mongoose.Types.ObjectId
-  rating: number
-}
-
-export { ProductDto, IFindProductsQueries }
+export { ProductDto }
