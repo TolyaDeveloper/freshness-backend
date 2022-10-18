@@ -19,7 +19,7 @@ const productSchema = new mongoose.Schema({
       {
         vitamin: { type: String },
         quantity: { type: String },
-        dv: { type: Number }
+        dv: { type: String }
       }
     ]
   },
