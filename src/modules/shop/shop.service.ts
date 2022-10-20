@@ -10,6 +10,8 @@ import {
   IFindProductsQueries
 } from './interfaces/shop.controller.interface'
 import mongoose from 'mongoose'
+import { ProductModelType } from '../../models/product.model'
+import { ProductReviewDto } from './dto/product-review.dto'
 
 @injectable()
 class ShopService implements IShopService {
@@ -30,8 +32,19 @@ class ShopService implements IShopService {
     return this.shopRepository.findCategoryById(id)
   }
 
+  public async findProductComments(productId: mongoose.Types.ObjectId) {
+    return this.shopRepository.findProductComments(productId)
+  }
+
   public async addCategory(category: CategoryDto) {
     return this.shopRepository.addCategory(category)
+  }
+
+  public async addProductReview(
+    review: ProductReviewDto,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.shopRepository.addProductReview(review, userId)
   }
 
   public async findProducts(queries: IFindProductsQueries) {

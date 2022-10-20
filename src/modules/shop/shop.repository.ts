@@ -12,12 +12,14 @@ import {
 import { CategoryDto } from './dto/category.dto'
 import { TagDto } from './dto/tag.dto'
 import { ProductDto } from './dto/product.dto'
+import { ProductReviewDto } from './dto/product-review.dto'
 import {
   IGatherCategoryFiltersQueries,
   IFindProductsQueries
 } from './interfaces/shop.controller.interface'
 import { handleQueryObject } from '../../utils/handleQueryObject'
 import { PriceTypeSortEnum } from './shop.variables'
+import { nanoid } from 'nanoid'
 import mongoose from 'mongoose'
 
 @injectable()
@@ -120,6 +122,13 @@ class ShopRepository implements IShopRepository {
     return categoryModel.findById(id).lean()
   }
 
+  public async findProductComments(productId: mongoose.Types.ObjectId) {
+    return productModel
+      .findById(productId, { reviews: 1 })
+      .populate('reviews.user', 'firstName lastName avatarUri')
+      .lean()
+  }
+
   public async addCategory(category: CategoryDto) {
     return categoryModel.create(category)
   }
@@ -136,14 +145,20 @@ class ShopRepository implements IShopRepository {
     }
 
     return productModel
-      .find({
-        categories: rest.category,
-        tags: rest.tag,
-        rating: handleQueryObject({ $in: rest.rating }),
-        biology: handleQueryObject({ $in: rest.biology }),
-        price: handleQueryObject({ $gte: rest.minPrice, $lte: rest.maxPrice }),
-        deliveryArea: rest.country
-      })
+      .find(
+        {
+          categories: rest.category,
+          tags: rest.tag,
+          rating: handleQueryObject({ $in: rest.rating }),
+          biology: handleQueryObject({ $in: rest.biology }),
+          price: handleQueryObject({
+            $gte: rest.minPrice,
+            $lte: rest.maxPrice
+          }),
+          deliveryArea: rest.country
+        },
+        { reviews: 0, questions: 0 }
+      )
       .skip(skip)
       .limit(limit)
       .sort(sortQuery)
@@ -151,11 +166,35 @@ class ShopRepository implements IShopRepository {
   }
 
   public async findProductById(id: mongoose.Types.ObjectId) {
-    return productModel.findById(id).populate('categories').lean()
+    return productModel
+      .findById(id, { reviews: 0, questions: 0 })
+      .populate('categories')
+      .lean()
   }
 
   public async addProduct(product: ProductDto) {
     return productModel.create(product)
+  }
+
+  public async addProductReview(
+    review: ProductReviewDto,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return productModel
+      .findOneAndUpdate(
+        { _id: review.productId },
+        {
+          $push: {
+            reviews: {
+              _id: nanoid(),
+              comment: review.comment,
+              user: userId,
+              createdAt: new Date()
+            }
+          }
+        }
+      )
+      .lean()
   }
 
   public async findTags() {
