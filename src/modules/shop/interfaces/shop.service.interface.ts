@@ -36,6 +36,7 @@ export interface IShopService {
   findProductComments(
     productId: mongoose.Types.ObjectId
   ): Promise<ProductModelType | null>
+  findReviewsAndQuestionsCount(id: mongoose.Types.ObjectId): Promise<{}>
   addProduct(product: ProductDto): Promise<ProductModelType>
   addProductReview(
     review: ProductReviewDto,

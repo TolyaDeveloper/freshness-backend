@@ -10,6 +10,10 @@ export interface IFindCommentsParams {
   productId: mongoose.Types.ObjectId
 }
 
+export interface IFindReviewsAndQuestionsParams {
+  productId: mongoose.Types.ObjectId
+}
+
 export interface IGatherCategoryFiltersQueries {
   category: mongoose.Types.ObjectId
 }
@@ -52,6 +56,11 @@ export interface IShopController extends BaseController {
   ): Promise<void>
   findProductComments(
     req: Request<IFindCommentsParams>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  findReviewsAndQuestionsCount(
+    req: Request<IFindReviewsAndQuestionsParams>,
     res: Response,
     next: NextFunction
   ): Promise<void>

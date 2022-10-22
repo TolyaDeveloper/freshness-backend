@@ -8,7 +8,8 @@ import {
   IGatherCategoryFiltersQueries,
   IFindByIdParams,
   IFindProductsQueries,
-  IFindCommentsParams
+  IFindCommentsParams,
+  IFindReviewsAndQuestionsParams
 } from './interfaces/shop.controller.interface'
 import { IShopService } from './interfaces/shop.service.interface'
 import { ILoggerService } from '../../logger/logger.service.interface'
@@ -19,6 +20,7 @@ import { ValidateMiddleware } from '../../common/validate.middleware'
 import { RoleMiddleware } from '../../common/role.middleware'
 import { AuthMiddleware } from '../../common/auth.middleware'
 import { ProductReviewDto } from './dto/product-review.dto'
+import { ParsedQs } from 'qs'
 
 @injectable()
 class ShopController extends BaseController implements IShopController {
@@ -67,6 +69,11 @@ class ShopController extends BaseController implements IShopController {
         method: 'get',
         path: '/products/comments/:productId',
         func: this.findProductComments
+      },
+      {
+        method: 'get',
+        path: '/products/reviews-questions/count/:productId',
+        func: this.findReviewsAndQuestionsCount
       },
       {
         method: 'post',
@@ -229,6 +236,24 @@ class ShopController extends BaseController implements IShopController {
       )
 
       res.json(comments)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(404, err.message))
+      }
+    }
+  }
+
+  public async findReviewsAndQuestionsCount(
+    req: Request<IFindReviewsAndQuestionsParams>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const counts = await this.shopService.findReviewsAndQuestionsCount(
+        req.params.productId
+      )
+
+      res.json(counts)
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(404, err.message))

@@ -36,6 +36,10 @@ class ShopService implements IShopService {
     return this.shopRepository.findProductComments(productId)
   }
 
+  public async findReviewsAndQuestionsCount(id: mongoose.Types.ObjectId) {
+    return this.shopRepository.findReviewsAndQuestionsCount(id)
+  }
+
   public async addCategory(category: CategoryDto) {
     return this.shopRepository.addCategory(category)
   }

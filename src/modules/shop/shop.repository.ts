@@ -129,6 +129,26 @@ class ShopRepository implements IShopRepository {
       .lean()
   }
 
+  public async findReviewsAndQuestionsCount(id: mongoose.Types.ObjectId) {
+    const [counts] = await productModel.aggregate([
+      {
+        $match: { _id: new mongoose.Types.ObjectId(id) }
+      },
+      {
+        $facet: {
+          reviewsCount: [
+            { $project: { reviewsCount: { $size: '$reviews' }, _id: 0 } }
+          ],
+          questionsCount: [
+            { $project: { questionsCount: { $size: '$questions' }, _id: 0 } }
+          ]
+        }
+      }
+    ])
+
+    return counts
+  }
+
   public async addCategory(category: CategoryDto) {
     return categoryModel.create(category)
   }
