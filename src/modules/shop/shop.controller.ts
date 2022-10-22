@@ -7,7 +7,9 @@ import {
   IShopController,
   IGatherCategoryFiltersQueries,
   IFindByIdParams,
-  IFindProductsQueries
+  IFindProductsQueries,
+  IFindCommentsParams,
+  IFindReviewsAndQuestionsParams
 } from './interfaces/shop.controller.interface'
 import { IShopService } from './interfaces/shop.service.interface'
 import { ILoggerService } from '../../logger/logger.service.interface'
@@ -16,6 +18,9 @@ import { TagDto } from './dto/tag.dto'
 import { ProductDto } from './dto/product.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
 import { RoleMiddleware } from '../../common/role.middleware'
+import { AuthMiddleware } from '../../common/auth.middleware'
+import { ProductReviewDto } from './dto/product-review.dto'
+import { ParsedQs } from 'qs'
 
 @injectable()
 class ShopController extends BaseController implements IShopController {
@@ -61,12 +66,31 @@ class ShopController extends BaseController implements IShopController {
         func: this.findProductById
       },
       {
+        method: 'get',
+        path: '/products/comments/:productId',
+        func: this.findProductComments
+      },
+      {
+        method: 'get',
+        path: '/products/reviews-questions/count/:productId',
+        func: this.findReviewsAndQuestionsCount
+      },
+      {
         method: 'post',
         path: '/products/add',
         func: this.addProduct,
         middlewares: [
           new RoleMiddleware(['ADMIN']),
           new ValidateMiddleware(ProductDto)
+        ]
+      },
+      {
+        method: 'post',
+        path: '/products/add/review',
+        func: this.addProductReview,
+        middlewares: [
+          new AuthMiddleware(),
+          new ValidateMiddleware(ProductReviewDto)
         ]
       },
       {
@@ -201,6 +225,42 @@ class ShopController extends BaseController implements IShopController {
     }
   }
 
+  public async findProductComments(
+    req: Request<IFindCommentsParams>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const comments = await this.shopService.findProductComments(
+        req.params.productId
+      )
+
+      res.json(comments)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(404, err.message))
+      }
+    }
+  }
+
+  public async findReviewsAndQuestionsCount(
+    req: Request<IFindReviewsAndQuestionsParams>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const counts = await this.shopService.findReviewsAndQuestionsCount(
+        req.params.productId
+      )
+
+      res.json(counts)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(404, err.message))
+      }
+    }
+  }
+
   public async addProduct(
     req: Request<{}, {}, ProductDto>,
     res: Response,
@@ -210,6 +270,30 @@ class ShopController extends BaseController implements IShopController {
       await this.shopService.addProduct(req.body)
 
       res.json({ message: 'New product has been created!' })
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(500, err.message))
+      }
+    }
+  }
+
+  public async addProductReview(
+    req: Request<{}, {}, ProductReviewDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    console.log(req.body)
+    try {
+      const result = await this.shopService.addProductReview(
+        req.body,
+        req.user._id
+      )
+
+      if (!result) {
+        throw HttpError.NotFound()
+      }
+
+      res.json({ message: 'Review has been added!' })
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(500, err.message))

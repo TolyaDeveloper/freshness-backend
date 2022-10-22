@@ -3,6 +3,7 @@ import { type ProductModelType } from '../../../models/product.model'
 import { type TagModelType } from '../../../models/tag.model'
 import { CategoryDto } from '../dto/category.dto'
 import { ProductDto } from '../dto/product.dto'
+import { ProductReviewDto } from '../dto/product-review.dto'
 import {
   IGatherCategoryFiltersQueries,
   IFindProductsQueries
@@ -32,7 +33,15 @@ export interface IShopRepository {
     queries: IGatherCategoryFiltersQueries
   ): Promise<IGatherCategoryFilters>
   findProductById(id: mongoose.Types.ObjectId): Promise<ProductModelType | null>
+  findProductComments(
+    productId: mongoose.Types.ObjectId
+  ): Promise<ProductModelType | null>
+  findReviewsAndQuestionsCount(id: mongoose.Types.ObjectId): Promise<{}>
   addProduct(product: ProductDto): Promise<ProductModelType>
+  addProductReview(
+    review: ProductReviewDto,
+    userId: mongoose.Types.ObjectId
+  ): Promise<ProductModelType | null>
   findTags(): Promise<TagModelType[]>
   findTagById(id: mongoose.Types.ObjectId): Promise<TagModelType | null>
   addTag(tag: TagDto): Promise<TagModelType>

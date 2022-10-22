@@ -46,7 +46,13 @@ const productSchema = new mongoose.Schema({
   inStock: { type: Boolean, required: true },
   deliveryTime: { type: String, required: true },
   deliveryArea: { type: [String], required: true },
-  reviews: { type: Array, default: [] },
+  reviews: {
+    default: [],
+    _id: { type: mongoose.Schema.Types.ObjectId },
+    user: { ref: 'User', type: mongoose.Schema.Types.ObjectId },
+    comment: { type: String, required: true },
+    createdAt: { type: Date, required: true }
+  },
   questions: { type: Array, default: [] }
 })
 

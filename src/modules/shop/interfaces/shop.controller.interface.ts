@@ -6,17 +6,16 @@ export interface IFindByIdParams {
   id: mongoose.Types.ObjectId
 }
 
-export interface IGatherCategoryFiltersQueries {
-  category: mongoose.Types.ObjectId
+export interface IFindCommentsParams {
+  productId: mongoose.Types.ObjectId
 }
 
-export interface IQueries {
-  priceType: string
-  biology: string[]
-  country: string
-  rating: string[]
-  minPrice: number
-  maxPrice: number
+export interface IFindReviewsAndQuestionsParams {
+  productId: mongoose.Types.ObjectId
+}
+
+export interface IGatherCategoryFiltersQueries {
+  category: mongoose.Types.ObjectId
 }
 
 export interface IFindProductsQueries {
@@ -55,7 +54,22 @@ export interface IShopController extends BaseController {
     res: Response,
     next: NextFunction
   ): Promise<void>
+  findProductComments(
+    req: Request<IFindCommentsParams>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  findReviewsAndQuestionsCount(
+    req: Request<IFindReviewsAndQuestionsParams>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
   addProduct(req: Request, res: Response, next: NextFunction): Promise<void>
+  addProductReview(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
   findTags(req: Request, res: Response, next: NextFunction): Promise<void>
   findTagById(
     req: Request<IFindByIdParams>,
