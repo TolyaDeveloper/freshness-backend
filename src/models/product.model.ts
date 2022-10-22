@@ -55,7 +55,7 @@ const productSchema = new mongoose.Schema({
   deliveryArea: { type: [String], required: true },
   reviews: {
     default: [],
-    _id: { type: mongoose.Schema.Types.ObjectId },
+    _id: { type: String },
     user: { ref: 'User', type: mongoose.Schema.Types.ObjectId },
     comment: { type: String, required: true },
     createdAt: { type: Date, required: true }
