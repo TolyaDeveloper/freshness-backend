@@ -7,7 +7,7 @@ import { hash, compare } from 'bcryptjs'
 import { IConfigService } from '../../config/config.service.interface'
 import { IAuthService } from './interfaces/auth.service.interface'
 import { IUserRepository } from '../user/interfaces/user.repository.interface'
-import { LoginDto } from './dto/login.dto'
+import { LoginDto, UserReturnDto } from './dto/login.dto'
 import { ITokenService } from '../../services/token/interfaces/token.service.interface'
 import { ITokens } from '../../interfaces/token.interface'
 import { IMailService } from '../../services/mail/interfaces/mail.service.inerface'
@@ -25,12 +25,7 @@ class AuthService implements IAuthService {
     @inject(TYPES.AuthRepository) private authRepository: IAuthRepository
   ) {}
 
-  public async signup({
-    firstName,
-    lastName,
-    email,
-    password
-  }: SignupDto): Promise<ITokens> {
+  public async signup({ firstName, lastName, email, password }: SignupDto) {
     const candidate = await this.userRepository.findUserByEmail(email)
 
     if (candidate) {
@@ -71,10 +66,10 @@ class AuthService implements IAuthService {
 
     await this.tokenService.saveRefreshToken(tokens.refreshToken, newUser._id)
 
-    return tokens
+    return { ...tokens, ...new UserReturnDto(newUser) }
   }
 
-  public async login({ email, password }: LoginDto): Promise<ITokens> {
+  public async login({ email, password }: LoginDto) {
     const user = await this.userRepository.findUserByEmail(email)
 
     if (!user) {
@@ -95,7 +90,7 @@ class AuthService implements IAuthService {
 
     await this.tokenService.saveRefreshToken(tokens.refreshToken, user._id)
 
-    return tokens
+    return { ...tokens, ...new UserReturnDto(user) }
   }
 
   public async activate(id: mongoose.Types.ObjectId): Promise<void> {
@@ -140,7 +135,7 @@ class AuthService implements IAuthService {
 
     await this.tokenService.saveRefreshToken(tokens.refreshToken, user._id)
 
-    return tokens
+    return { ...tokens, ...new UserReturnDto(user) }
   }
 }
 
