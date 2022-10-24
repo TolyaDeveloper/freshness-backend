@@ -18,6 +18,10 @@ class UserReturnDto {
     this.user.lastName = model.lastName
     this.user.email = model.email
     this.user.avatarUri = model.avatarUri
+    this.user.wishlist = model.wishlist
+    this.user.cart = model.cart
+    this.user.compare = model.compare
+    this.user.ordersHistory = model.ordersHistory
   }
 }
 
