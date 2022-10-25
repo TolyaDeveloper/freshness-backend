@@ -18,6 +18,7 @@ class SignupDto {
 
   public roles: string[]
   public activationLink: string
+  public avatarUri: string | undefined
 }
 
 export { SignupDto }

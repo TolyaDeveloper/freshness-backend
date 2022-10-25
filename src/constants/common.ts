@@ -7,4 +7,6 @@ const PATH_TO_IMAGES = {
   ROOT: '/images'
 }
 
-export { PATH_TO_IMAGES }
+const AVATAR_MIME_TYPES = ['image/png', 'image/jpeg']
+
+export { PATH_TO_IMAGES, AVATAR_MIME_TYPES }

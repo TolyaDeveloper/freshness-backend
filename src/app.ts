@@ -10,10 +10,14 @@ import { IShopController } from './modules/shop/interfaces/shop.controller.inter
 import { IAuthController } from './modules/auth/interfaces/auth.controller.interface'
 import { IUserController } from './modules/user/interfaces/user.controller.interface'
 import { IBlogController } from './modules/blog/interfaces/blog.controller.interface'
+import multer from 'multer'
+
 import cors from 'cors'
 import helmet from 'helmet'
 import cookieParser from 'cookie-parser'
+import { PATH_TO_IMAGES } from './constants/common'
 
+const upload = multer({ dest: `public/${PATH_TO_IMAGES.PATH_TO_AVATARS}/` })
 @injectable()
 class App {
   public port: number
@@ -50,6 +54,11 @@ class App {
     this.app.use(this.authController.router)
     this.app.use(this.userController.router)
     this.app.use(this.blogController.router)
+    // this.app.use(
+    //   '/auth/signup',
+    //   upload.single('avatarUri'),
+    //   this.authController.signup
+    // )
   }
 
   private useExceptionFilters(): void {

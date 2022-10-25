@@ -13,6 +13,7 @@ import { IAuthService } from './interfaces/auth.service.interface'
 import { HttpError } from '../../exceptions/http-error.class'
 import { ValidateMiddleware } from '../../common/validate.middleware'
 import { IConfigService } from '../../config/config.service.interface'
+import { MulterMiddleware } from '../../common/multer.middleware'
 
 @injectable()
 class AuthController extends BaseController implements IAuthController {
@@ -27,7 +28,10 @@ class AuthController extends BaseController implements IAuthController {
         method: 'post',
         path: '/auth/signup',
         func: this.signup,
-        middlewares: [new ValidateMiddleware(SignupDto)]
+        middlewares: [
+          new MulterMiddleware('avatarUri'),
+          new ValidateMiddleware(SignupDto)
+        ]
       },
       {
         method: 'post',
@@ -47,7 +51,10 @@ class AuthController extends BaseController implements IAuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const result = await this.authService.signup(req.body)
+      const result = await this.authService.signup({
+        ...req.body,
+        avatarUri: req.file?.filename
+      })
 
       res.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,

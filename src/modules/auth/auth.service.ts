@@ -9,10 +9,10 @@ import { IAuthService } from './interfaces/auth.service.interface'
 import { IUserRepository } from '../user/interfaces/user.repository.interface'
 import { LoginDto, UserReturnDto } from './dto/login.dto'
 import { ITokenService } from '../../services/token/interfaces/token.service.interface'
-import { ITokens } from '../../interfaces/token.interface'
 import { IMailService } from '../../services/mail/interfaces/mail.service.inerface'
 import { UserModelType } from '../../models/user.model'
 import { IAuthRepository } from './interfaces/auth.repository.interface'
+import { PATH_TO_IMAGES } from '../../constants/common'
 import mongoose from 'mongoose'
 
 @injectable()
@@ -25,7 +25,13 @@ class AuthService implements IAuthService {
     @inject(TYPES.AuthRepository) private authRepository: IAuthRepository
   ) {}
 
-  public async signup({ firstName, lastName, email, password }: SignupDto) {
+  public async signup({
+    firstName,
+    lastName,
+    email,
+    password,
+    avatarUri
+  }: SignupDto) {
     const candidate = await this.userRepository.findUserByEmail(email)
 
     if (candidate) {
@@ -50,7 +56,10 @@ class AuthService implements IAuthService {
       email,
       password: hashedPassword,
       activationLink,
-      roles: [userRole.role]
+      roles: [userRole.role],
+      avatarUri: avatarUri
+        ? `${PATH_TO_IMAGES.PATH_TO_AVATARS}/${avatarUri}`
+        : PATH_TO_IMAGES.DEFAULT_AVATAR
     })
 
     await this.mailService.sendActivationEmail(
