@@ -29,8 +29,8 @@ class AuthController extends BaseController implements IAuthController {
         path: '/auth/signup',
         func: this.signup,
         middlewares: [
-          new MulterMiddleware('avatarUri'),
           new ValidateMiddleware(SignupDto)
+          // new MulterMiddleware('avatarUri')
         ]
       },
       {

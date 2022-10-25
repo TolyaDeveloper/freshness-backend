@@ -54,11 +54,6 @@ class App {
     this.app.use(this.authController.router)
     this.app.use(this.userController.router)
     this.app.use(this.blogController.router)
-    // this.app.use(
-    //   '/auth/signup',
-    //   upload.single('avatarUri'),
-    //   this.authController.signup
-    // )
   }
 
   private useExceptionFilters(): void {

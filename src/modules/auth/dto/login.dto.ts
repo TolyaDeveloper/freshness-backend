@@ -22,6 +22,7 @@ class UserReturnDto {
     this.user.cart = model.cart
     this.user.compare = model.compare
     this.user.ordersHistory = model.ordersHistory
+    this.user.isActivated = model.isActivated
   }
 }
 
