@@ -25,13 +25,7 @@ class AuthService implements IAuthService {
     @inject(TYPES.AuthRepository) private authRepository: IAuthRepository
   ) {}
 
-  public async signup({
-    firstName,
-    lastName,
-    email,
-    password,
-    avatarUri
-  }: SignupDto) {
+  public async signup({ firstName, lastName, email, password }: SignupDto) {
     const candidate = await this.userRepository.findUserByEmail(email)
 
     if (candidate) {
@@ -56,10 +50,7 @@ class AuthService implements IAuthService {
       email,
       password: hashedPassword,
       activationLink,
-      roles: [userRole.role],
-      avatarUri: avatarUri
-        ? `${PATH_TO_IMAGES.PATH_TO_AVATARS}/${avatarUri}`
-        : PATH_TO_IMAGES.DEFAULT_AVATAR
+      roles: [userRole.role]
     })
 
     await this.mailService.sendActivationEmail(

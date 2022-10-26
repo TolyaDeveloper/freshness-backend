@@ -3,6 +3,7 @@ import { CustomerReviewModelType } from '../../../models/customer-review.model'
 import { SignupDto } from '../../auth/dto/signup.dto'
 import { CustomerReviewDto } from '../dto/customer-review.dto'
 import { ProductModelType } from '../../../models/product.model'
+import { UpdateProfileDto } from '../dto/update-profile.dto'
 import mongoose from 'mongoose'
 
 export interface IUserRepository {
@@ -19,4 +20,8 @@ export interface IUserRepository {
   findCartGoods(
     productIds: mongoose.Types.ObjectId[]
   ): Promise<ProductModelType[]>
+  updateProfile(
+    profileChanges: UpdateProfileDto,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
 }

@@ -51,10 +51,7 @@ class AuthController extends BaseController implements IAuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const result = await this.authService.signup({
-        ...req.body,
-        avatarUri: req.file?.filename
-      })
+      const result = await this.authService.signup(req.body)
 
       res.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,
