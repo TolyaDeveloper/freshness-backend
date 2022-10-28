@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { BaseController } from '../../../common/base.controller'
-import { UpdateProfileDto } from '../dto/update-profile.dto'
+import { UpdateProfileDto, AddToWishlistDto } from '../dto/update-profile.dto'
 import mongoose from 'mongoose'
 
 export interface IFindCartGoodsQueries {
@@ -8,11 +8,6 @@ export interface IFindCartGoodsQueries {
 }
 
 export interface IUserController extends BaseController {
-  updateProfile(
-    req: Request<{}, {}, UpdateProfileDto>,
-    res: Response,
-    next: NextFunction
-  ): Promise<void>
   findCustomerReviews(
     req: Request,
     res: Response,
@@ -23,8 +18,18 @@ export interface IUserController extends BaseController {
     res: Response,
     next: NextFunction
   ): Promise<void>
-  findCartGoods(
+  findProductsByIds(
     req: Request<{}, {}, {}, IFindCartGoodsQueries>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  updateProfile(
+    req: Request<{}, {}, UpdateProfileDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  addToWishlist(
+    req: Request<{}, {}, AddToWishlistDto>,
     res: Response,
     next: NextFunction
   ): Promise<void>

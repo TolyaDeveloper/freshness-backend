@@ -7,6 +7,7 @@ import { IUserService } from './interfaces/user.service.interface'
 import { UpdateProfileDto } from './dto/update-profile.dto'
 import { PATH_TO_IMAGES } from '../../constants/common'
 import mongoose from 'mongoose'
+import { UserModelType } from '../../models/user.model'
 
 @injectable()
 class UserService implements IUserService {
@@ -22,8 +23,8 @@ class UserService implements IUserService {
     return this.userRepository.addCustomerReview(customerReviewDto)
   }
 
-  public async findCartGoods(productIds: mongoose.Types.ObjectId[]) {
-    return this.userRepository.findCartGoods(productIds)
+  public async findProductsByIds(productIds: mongoose.Types.ObjectId[]) {
+    return this.userRepository.findProductsByIds(productIds)
   }
 
   public async updateProfile(
@@ -51,6 +52,13 @@ class UserService implements IUserService {
     }
 
     return updatedProfile
+  }
+
+  public async addToWishlist(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.userRepository.addToWishlist(productId, userId)
   }
 }
 

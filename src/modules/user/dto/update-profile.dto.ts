@@ -1,4 +1,5 @@
 import { IsString, IsNotEmpty } from 'class-validator'
+import mongoose from 'mongoose'
 
 class UpdateProfileDto {
   @IsNotEmpty()
@@ -16,4 +17,10 @@ class UpdateProfileDto {
   public avatarUri: string | undefined
 }
 
-export { UpdateProfileDto }
+class AddToWishlistDto {
+  @IsNotEmpty()
+  @IsString()
+  public productId: mongoose.Types.ObjectId
+}
+
+export { UpdateProfileDto, AddToWishlistDto }

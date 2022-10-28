@@ -12,7 +12,7 @@ import { HttpError } from '../../exceptions/http-error.class'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
 import { RoleMiddleware } from '../../common/role.middleware'
-import { UpdateProfileDto } from './dto/update-profile.dto'
+import { UpdateProfileDto, AddToWishlistDto } from './dto/update-profile.dto'
 import { AuthMiddleware } from '../../common/auth.middleware'
 import { MulterMiddleware } from '../../common/multer.middleware'
 
@@ -50,8 +50,17 @@ class UserController extends BaseController implements IUserController {
       },
       {
         method: 'get',
-        path: '/cart',
-        func: this.findCartGoods
+        path: '/user/products/ids',
+        func: this.findProductsByIds
+      },
+      {
+        method: 'patch',
+        path: '/user/wishlist/add',
+        func: this.addToWishlist,
+        middlewares: [
+          new AuthMiddleware(),
+          new ValidateMiddleware(AddToWishlistDto)
+        ]
       }
     ])
   }
@@ -111,13 +120,13 @@ class UserController extends BaseController implements IUserController {
     }
   }
 
-  public async findCartGoods(
+  public async findProductsByIds(
     req: Request<{}, {}, {}, IFindCartGoodsQueries>,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const cartProducts = await this.userService.findCartGoods(
+      const cartProducts = await this.userService.findProductsByIds(
         req.query.productIds
       )
 
@@ -125,6 +134,29 @@ class UserController extends BaseController implements IUserController {
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(404, err.message))
+      }
+    }
+  }
+
+  public async addToWishlist(
+    req: Request<{}, {}, AddToWishlistDto>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const updatedWishlist = await this.userService.addToWishlist(
+        req.body.productId,
+        req.user._id
+      )
+
+      if (!updatedWishlist) {
+        throw HttpError.NotFound()
+      }
+
+      res.json(updatedWishlist)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(500, err.message))
       }
     }
   }

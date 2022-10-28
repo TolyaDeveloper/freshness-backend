@@ -10,11 +10,15 @@ export interface IUserService {
   addCustomerReview(
     customerReviewDto: CustomerReviewDto
   ): Promise<CustomerReviewModelType>
-  findCartGoods(
+  findProductsByIds(
     productIds: mongoose.Types.ObjectId[]
   ): Promise<ProductModelType[]>
   updateProfile(
     profileChanges: UpdateProfileDto,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
+  addToWishlist(
+    productId: mongoose.Types.ObjectId,
     userId: mongoose.Types.ObjectId
   ): Promise<UserModelType | null>
 }
