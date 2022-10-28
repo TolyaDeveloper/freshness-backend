@@ -13,6 +13,7 @@ import { IAuthService } from './interfaces/auth.service.interface'
 import { HttpError } from '../../exceptions/http-error.class'
 import { ValidateMiddleware } from '../../common/validate.middleware'
 import { IConfigService } from '../../config/config.service.interface'
+import { MulterMiddleware } from '../../common/multer.middleware'
 
 @injectable()
 class AuthController extends BaseController implements IAuthController {
@@ -53,7 +54,8 @@ class AuthController extends BaseController implements IAuthController {
         httpOnly: true,
         maxAge: Number(this.configService.get('COOKIES_JWT_REFRESH_EXPIRES_IN'))
       })
-      res.json({ accessToken: result.accessToken })
+
+      res.json({ accessToken: result.accessToken, user: result.user })
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(409, err.message))
@@ -73,7 +75,8 @@ class AuthController extends BaseController implements IAuthController {
         httpOnly: true,
         maxAge: Number(this.configService.get('COOKIES_JWT_REFRESH_EXPIRES_IN'))
       })
-      res.json({ accessToken: result.accessToken })
+
+      res.json({ accessToken: result.accessToken, user: result.user })
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(401, err.message))
@@ -123,16 +126,16 @@ class AuthController extends BaseController implements IAuthController {
   ): Promise<void> {
     try {
       const { refreshToken } = req.cookies
-      const newTokens = await this.authService.refresh(refreshToken)
+      const result = await this.authService.refresh(refreshToken)
 
-      res.cookie('refreshToken', newTokens.refreshToken, {
+      res.cookie('refreshToken', result.refreshToken, {
         maxAge: Number(
           this.configService.get('COOKIES_JWT_REFRESH_EXPIRES_IN')
         ),
         httpOnly: true
       })
 
-      res.json({ accessToken: newTokens.accessToken })
+      res.json({ accessToken: result.accessToken, user: result.user })
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(401, err.message))

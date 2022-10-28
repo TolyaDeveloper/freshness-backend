@@ -6,6 +6,13 @@ enum ProductModelBiologyEnum {
   Farm = 'Farm'
 }
 
+export enum ProductCartTypeEnum {
+  PCS = 'Pcs',
+  KGS = 'Kgs',
+  BOX = 'Box',
+  PACK = 'Pack'
+}
+
 const productSchema = new mongoose.Schema({
   title: { type: String, required: true },
   imageUri: { type: String, default: PATH_TO_IMAGES.NO_PRODUCT_THUMBNAIL },
@@ -48,7 +55,7 @@ const productSchema = new mongoose.Schema({
   deliveryArea: { type: [String], required: true },
   reviews: {
     default: [],
-    _id: { type: mongoose.Schema.Types.ObjectId },
+    _id: { type: String },
     user: { ref: 'User', type: mongoose.Schema.Types.ObjectId },
     comment: { type: String, required: true },
     createdAt: { type: Date, required: true }

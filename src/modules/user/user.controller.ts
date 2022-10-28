@@ -12,6 +12,9 @@ import { HttpError } from '../../exceptions/http-error.class'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
 import { RoleMiddleware } from '../../common/role.middleware'
+import { UpdateProfileDto } from './dto/update-profile.dto'
+import { AuthMiddleware } from '../../common/auth.middleware'
+import { MulterMiddleware } from '../../common/multer.middleware'
 
 @injectable()
 class UserController extends BaseController implements IUserController {
@@ -21,6 +24,16 @@ class UserController extends BaseController implements IUserController {
     super(logger)
 
     this.bindRoutes([
+      {
+        method: 'patch',
+        path: '/user/update-profile',
+        func: this.updateProfile,
+        middlewares: [
+          new AuthMiddleware(),
+          new MulterMiddleware('avatarUri'),
+          new ValidateMiddleware(UpdateProfileDto)
+        ]
+      },
       {
         method: 'get',
         path: '/customer-reviews',
@@ -41,6 +54,29 @@ class UserController extends BaseController implements IUserController {
         func: this.findCartGoods
       }
     ])
+  }
+
+  public async updateProfile(
+    req: Request<{}, {}, UpdateProfileDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const updatedUser = await this.userService.updateProfile(
+        { ...req.body, avatarUri: req.file?.filename },
+        req.user._id
+      )
+
+      if (!updatedUser) {
+        throw HttpError.NotFound()
+      }
+
+      res.json(updatedUser)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(500, err.message))
+      }
+    }
   }
 
   public async findCustomerReviews(

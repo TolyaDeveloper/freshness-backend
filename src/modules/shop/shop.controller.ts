@@ -282,7 +282,6 @@ class ShopController extends BaseController implements IShopController {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    console.log(req.body)
     try {
       const result = await this.shopService.addProductReview(
         req.body,

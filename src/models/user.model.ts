@@ -1,5 +1,12 @@
 import { PATH_TO_IMAGES } from '../constants/common'
+import { ProductCartTypeEnum } from './product.model'
 import mongoose from 'mongoose'
+
+interface ICart {
+  type: ProductCartTypeEnum
+  amount: number
+  _id: string
+}
 
 const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
@@ -46,4 +53,4 @@ type UserModelType = mongoose.InferSchemaType<typeof userSchema> & {
   _id: mongoose.Types.ObjectId
 }
 
-export { userModel, UserModelType }
+export { userModel, UserModelType, ICart }

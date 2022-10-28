@@ -6,6 +6,7 @@ import { customerReviewModel } from '../../models/customer-review.model'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { productModel } from '../../models/product.model'
 import mongoose from 'mongoose'
+import { UpdateProfileDto } from './dto/update-profile.dto'
 
 @injectable()
 class UserRepository implements IUserRepository {
@@ -37,6 +38,28 @@ class UserRepository implements IUserRepository {
 
   public async findCartGoods(productsIds: mongoose.Types.ObjectId[]) {
     return productModel.find({ _id: { $in: productsIds } }).lean()
+  }
+
+  public async updateProfile(
+    { firstName, lastName, avatarUri }: UpdateProfileDto,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return userModel
+      .findByIdAndUpdate(
+        userId,
+        {
+          $set: {
+            firstName,
+            lastName,
+            avatarUri
+          }
+        },
+        {
+          projection: { firstName: 1, lastName: 1, avatarUri: 1 },
+          new: true
+        }
+      )
+      .lean()
   }
 }
 
