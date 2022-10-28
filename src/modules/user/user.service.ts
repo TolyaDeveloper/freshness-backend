@@ -1,11 +1,12 @@
 import { inject, injectable } from 'inversify'
+import { unlink } from 'fs/promises'
 import { TYPES } from '../../types'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { IUserRepository } from './interfaces/user.repository.interface'
 import { IUserService } from './interfaces/user.service.interface'
 import { UpdateProfileDto } from './dto/update-profile.dto'
-import mongoose from 'mongoose'
 import { PATH_TO_IMAGES } from '../../constants/common'
+import mongoose from 'mongoose'
 
 @injectable()
 class UserService implements IUserService {
@@ -33,10 +34,23 @@ class UserService implements IUserService {
       ? `${PATH_TO_IMAGES.PATH_TO_AVATARS}/${profileChanges.avatarUri}`
       : undefined
 
-    return this.userRepository.updateProfile(
+    const updatedProfile = await this.userRepository.updateProfile(
       { ...profileChanges, avatarUri: withNewAvatar },
       userId
     )
+
+    if (
+      withNewAvatar &&
+      profileChanges.currentAvatarUri !== PATH_TO_IMAGES.DEFAULT_AVATAR
+    ) {
+      try {
+        await unlink(`public${profileChanges.currentAvatarUri}`)
+      } catch {
+        return updatedProfile
+      }
+    }
+
+    return updatedProfile
   }
 }
 

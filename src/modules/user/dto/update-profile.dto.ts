@@ -9,6 +9,10 @@ class UpdateProfileDto {
   @IsString()
   public lastName: string
 
+  @IsNotEmpty()
+  @IsString()
+  public currentAvatarUri: string
+
   public avatarUri: string | undefined
 }
 

@@ -62,7 +62,6 @@ class UserController extends BaseController implements IUserController {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log(req.file)
       const updatedUser = await this.userService.updateProfile(
         { ...req.body, avatarUri: req.file?.filename },
         req.user._id
