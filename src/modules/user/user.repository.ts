@@ -76,6 +76,45 @@ class UserRepository implements IUserRepository {
       { new: true, projection: { wishlist: 1 } }
     )
   }
+
+  public async removeFromWishlist(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return userModel.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { wishlist: productId }
+      },
+      { new: true, projection: { wishlist: 1 } }
+    )
+  }
+
+  public async addToCompare(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return userModel.findByIdAndUpdate(
+      userId,
+      {
+        $push: { compare: productId }
+      },
+      { new: true, projection: { compare: 1 } }
+    )
+  }
+
+  public async removeFromCompare(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return userModel.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { compare: productId }
+      },
+      { new: true, projection: { compare: 1 } }
+    )
+  }
 }
 
 export { UserRepository }

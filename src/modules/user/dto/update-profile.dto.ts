@@ -23,4 +23,28 @@ class AddToWishlistDto {
   public productId: mongoose.Types.ObjectId
 }
 
-export { UpdateProfileDto, AddToWishlistDto }
+class RemoveFromWishlistDto {
+  @IsNotEmpty()
+  @IsString()
+  public productId: mongoose.Types.ObjectId
+}
+
+class AddToCompareDto {
+  @IsNotEmpty()
+  @IsString()
+  public productId: mongoose.Types.ObjectId
+}
+
+class RemoveFromCompareDto {
+  @IsNotEmpty()
+  @IsString()
+  public productId: mongoose.Types.ObjectId
+}
+
+export {
+  UpdateProfileDto,
+  AddToWishlistDto,
+  RemoveFromWishlistDto,
+  AddToCompareDto,
+  RemoveFromCompareDto
+}

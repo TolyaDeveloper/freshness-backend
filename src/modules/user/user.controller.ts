@@ -12,7 +12,13 @@ import { HttpError } from '../../exceptions/http-error.class'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { ValidateMiddleware } from '../../common/validate.middleware'
 import { RoleMiddleware } from '../../common/role.middleware'
-import { UpdateProfileDto, AddToWishlistDto } from './dto/update-profile.dto'
+import {
+  UpdateProfileDto,
+  AddToWishlistDto,
+  RemoveFromWishlistDto,
+  AddToCompareDto,
+  RemoveFromCompareDto
+} from './dto/update-profile.dto'
 import { AuthMiddleware } from '../../common/auth.middleware'
 import { MulterMiddleware } from '../../common/multer.middleware'
 
@@ -60,6 +66,33 @@ class UserController extends BaseController implements IUserController {
         middlewares: [
           new AuthMiddleware(),
           new ValidateMiddleware(AddToWishlistDto)
+        ]
+      },
+      {
+        method: 'patch',
+        path: '/user/wishlist/remove',
+        func: this.removeFromWishlist,
+        middlewares: [
+          new AuthMiddleware(),
+          new ValidateMiddleware(RemoveFromWishlistDto)
+        ]
+      },
+      {
+        method: 'patch',
+        path: '/user/compare/add',
+        func: this.addToCompare,
+        middlewares: [
+          new AuthMiddleware(),
+          new ValidateMiddleware(AddToCompareDto)
+        ]
+      },
+      {
+        method: 'patch',
+        path: '/user/compare/remove',
+        func: this.removeFromCompare,
+        middlewares: [
+          new AuthMiddleware(),
+          new ValidateMiddleware(RemoveFromCompareDto)
         ]
       }
     ])
@@ -154,6 +187,75 @@ class UserController extends BaseController implements IUserController {
       }
 
       res.json(updatedWishlist)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(500, err.message))
+      }
+    }
+  }
+
+  public async removeFromWishlist(
+    req: Request<{}, {}, RemoveFromWishlistDto>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const updatedWishlist = await this.userService.removeFromWishlist(
+        req.body.productId,
+        req.user._id
+      )
+
+      if (!updatedWishlist) {
+        throw HttpError.NotFound()
+      }
+
+      res.json(updatedWishlist)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(500, err.message))
+      }
+    }
+  }
+
+  public async addToCompare(
+    req: Request<{}, {}, AddToCompareDto>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const updatedCompare = await this.userService.addToCompare(
+        req.body.productId,
+        req.user._id
+      )
+
+      if (!updatedCompare) {
+        throw HttpError.NotFound()
+      }
+
+      res.json(updatedCompare)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(500, err.message))
+      }
+    }
+  }
+
+  public async removeFromCompare(
+    req: Request<{}, {}, RemoveFromCompareDto>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const updatedCompare = await this.userService.removeFromCompare(
+        req.body.productId,
+        req.user._id
+      )
+
+      if (!updatedCompare) {
+        throw HttpError.NotFound()
+      }
+
+      res.json(updatedCompare)
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(500, err.message))

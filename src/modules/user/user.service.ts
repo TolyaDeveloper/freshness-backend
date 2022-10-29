@@ -60,6 +60,27 @@ class UserService implements IUserService {
   ) {
     return this.userRepository.addToWishlist(productId, userId)
   }
+
+  public async removeFromWishlist(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.userRepository.removeFromWishlist(productId, userId)
+  }
+
+  public async addToCompare(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.userRepository.addToCompare(productId, userId)
+  }
+
+  public async removeFromCompare(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.userRepository.removeFromCompare(productId, userId)
+  }
 }
 
 export { UserService }

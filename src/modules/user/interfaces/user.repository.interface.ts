@@ -28,4 +28,16 @@ export interface IUserRepository {
     productId: mongoose.Types.ObjectId,
     userId: mongoose.Types.ObjectId
   ): Promise<UserModelType | null>
+  removeFromWishlist(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
+  addToCompare(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
+  removeFromCompare(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
 }
