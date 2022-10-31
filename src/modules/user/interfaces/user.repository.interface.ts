@@ -3,7 +3,7 @@ import { CustomerReviewModelType } from '../../../models/customer-review.model'
 import { SignupDto } from '../../auth/dto/signup.dto'
 import { CustomerReviewDto } from '../dto/customer-review.dto'
 import { ProductModelType } from '../../../models/product.model'
-import { UpdateProfileDto } from '../dto/update-profile.dto'
+import { AddToCartDto, UpdateProfileDto } from '../dto/update-profile.dto'
 import mongoose from 'mongoose'
 
 export interface IUserRepository {
@@ -37,6 +37,14 @@ export interface IUserRepository {
     userId: mongoose.Types.ObjectId
   ): Promise<UserModelType | null>
   removeFromCompare(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
+  addToCart(
+    productInfo: AddToCartDto,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
+  removeFromCart(
     productId: mongoose.Types.ObjectId,
     userId: mongoose.Types.ObjectId
   ): Promise<UserModelType | null>

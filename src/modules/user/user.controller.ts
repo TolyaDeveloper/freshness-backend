@@ -17,7 +17,9 @@ import {
   AddToWishlistDto,
   RemoveFromWishlistDto,
   AddToCompareDto,
-  RemoveFromCompareDto
+  RemoveFromCompareDto,
+  AddToCartDto,
+  RemoveFromCartDto
 } from './dto/update-profile.dto'
 import { AuthMiddleware } from '../../common/auth.middleware'
 import { MulterMiddleware } from '../../common/multer.middleware'
@@ -93,6 +95,24 @@ class UserController extends BaseController implements IUserController {
         middlewares: [
           new AuthMiddleware(),
           new ValidateMiddleware(RemoveFromCompareDto)
+        ]
+      },
+      {
+        method: 'patch',
+        path: '/user/cart/add',
+        func: this.addToCart,
+        middlewares: [
+          new AuthMiddleware(),
+          new ValidateMiddleware(AddToCartDto)
+        ]
+      },
+      {
+        method: 'patch',
+        path: '/user/cart/remove',
+        func: this.removeFromCart,
+        middlewares: [
+          new AuthMiddleware(),
+          new ValidateMiddleware(RemoveFromCartDto)
         ]
       }
     ])
@@ -256,6 +276,52 @@ class UserController extends BaseController implements IUserController {
       }
 
       res.json(updatedCompare)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(500, err.message))
+      }
+    }
+  }
+
+  public async addToCart(
+    req: Request<{}, {}, AddToCartDto>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const updatedCart = await this.userService.addToCart(
+        req.body,
+        req.user._id
+      )
+
+      if (!updatedCart) {
+        throw HttpError.NotFound()
+      }
+
+      res.json(updatedCart)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(500, err.message))
+      }
+    }
+  }
+
+  public async removeFromCart(
+    req: Request<{}, {}, RemoveFromCartDto>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const updatedCart = await this.userService.removeFromCart(
+        req.body._id,
+        req.user._id
+      )
+
+      if (!updatedCart) {
+        throw HttpError.NotFound()
+      }
+
+      res.json(updatedCart)
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(500, err.message))

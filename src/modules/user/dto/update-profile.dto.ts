@@ -1,4 +1,5 @@
-import { IsString, IsNotEmpty } from 'class-validator'
+import { IsString, IsNotEmpty, IsNumber, Min } from 'class-validator'
+import { ProductCartVariantEnum } from '../../../interfaces/cart.interface'
 import mongoose from 'mongoose'
 
 class UpdateProfileDto {
@@ -41,10 +42,33 @@ class RemoveFromCompareDto {
   public productId: mongoose.Types.ObjectId
 }
 
+class AddToCartDto {
+  @IsNotEmpty()
+  @IsString()
+  public _id: mongoose.Types.ObjectId
+
+  @IsNotEmpty()
+  @IsString()
+  public variant: ProductCartVariantEnum
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(1)
+  public amount: number
+}
+
+class RemoveFromCartDto {
+  @IsNotEmpty()
+  @IsString()
+  public _id: mongoose.Types.ObjectId
+}
+
 export {
   UpdateProfileDto,
   AddToWishlistDto,
   RemoveFromWishlistDto,
   AddToCompareDto,
-  RemoveFromCompareDto
+  RemoveFromCompareDto,
+  AddToCartDto,
+  RemoveFromCartDto
 }

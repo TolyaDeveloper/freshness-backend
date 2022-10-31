@@ -1,12 +1,6 @@
 import { PATH_TO_IMAGES } from '../constants/common'
-import { ProductCartTypeEnum } from './product.model'
+import { ProductCartVariantEnum } from '../interfaces/cart.interface'
 import mongoose from 'mongoose'
-
-interface ICart {
-  type: ProductCartTypeEnum
-  amount: number
-  _id: string
-}
 
 const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
@@ -26,9 +20,9 @@ const userSchema = new mongoose.Schema({
   ],
   cart: [
     {
-      ref: 'Product',
-      type: mongoose.Schema.Types.ObjectId,
-      default: []
+      _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+      amount: { type: Number },
+      variant: { type: String, enum: ProductCartVariantEnum }
     }
   ],
   ordersHistory: [
@@ -53,4 +47,4 @@ type UserModelType = mongoose.InferSchemaType<typeof userSchema> & {
   _id: mongoose.Types.ObjectId
 }
 
-export { userModel, UserModelType, ICart }
+export { userModel, UserModelType }

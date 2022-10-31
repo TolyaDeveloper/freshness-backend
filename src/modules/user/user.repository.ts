@@ -5,13 +5,19 @@ import { SignupDto } from '../auth/dto/signup.dto'
 import { customerReviewModel } from '../../models/customer-review.model'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { productModel } from '../../models/product.model'
+import { AddToCartDto, UpdateProfileDto } from './dto/update-profile.dto'
 import mongoose from 'mongoose'
-import { UpdateProfileDto } from './dto/update-profile.dto'
 
 @injectable()
 class UserRepository implements IUserRepository {
   public async findUserByEmail(email: string) {
-    return userModel.findOne({ email }).lean()
+    return userModel
+      .findOne({ email })
+      .populate(
+        'cart._id',
+        '_id title smallDescription price oldPrice rating imageUri'
+      )
+      .lean()
   }
 
   public async createUser(credentials: SignupDto) {
@@ -25,7 +31,13 @@ class UserRepository implements IUserRepository {
   }
 
   public async findUserById(id: mongoose.Types.ObjectId) {
-    return userModel.findById(id).lean()
+    return userModel
+      .findById(id)
+      .populate(
+        'cart._id',
+        '_id title smallDescription price oldPrice rating imageUri'
+      )
+      .lean()
   }
 
   public async findCustomerReviews() {
@@ -113,6 +125,37 @@ class UserRepository implements IUserRepository {
         $pull: { compare: productId }
       },
       { new: true, projection: { compare: 1 } }
+    )
+  }
+
+  public async addToCart(
+    productInfo: AddToCartDto,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return userModel.findByIdAndUpdate(
+      userId,
+      { $push: { cart: productInfo } },
+      {
+        new: true,
+        projection: { cart: 1 },
+        populate: {
+          path: 'cart._id',
+          select: '_id title smallDescription price oldPrice rating imageUri'
+        }
+      }
+    )
+  }
+
+  public async removeFromCart(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return userModel.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { cart: { _id: productId } }
+      },
+      { new: true, projection: { cart: 1 } }
     )
   }
 }

@@ -4,10 +4,10 @@ import { TYPES } from '../../types'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { IUserRepository } from './interfaces/user.repository.interface'
 import { IUserService } from './interfaces/user.service.interface'
-import { UpdateProfileDto } from './dto/update-profile.dto'
+import { AddToCartDto, UpdateProfileDto } from './dto/update-profile.dto'
 import { PATH_TO_IMAGES } from '../../constants/common'
-import mongoose from 'mongoose'
 import { UserModelType } from '../../models/user.model'
+import mongoose from 'mongoose'
 
 @injectable()
 class UserService implements IUserService {
@@ -80,6 +80,20 @@ class UserService implements IUserService {
     userId: mongoose.Types.ObjectId
   ) {
     return this.userRepository.removeFromCompare(productId, userId)
+  }
+
+  public async addToCart(
+    productInfo: AddToCartDto,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.userRepository.addToCart(productInfo, userId)
+  }
+
+  public async removeFromCart(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.userRepository.removeFromCart(productId, userId)
   }
 }
 

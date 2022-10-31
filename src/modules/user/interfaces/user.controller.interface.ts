@@ -5,7 +5,9 @@ import {
   AddToWishlistDto,
   RemoveFromWishlistDto,
   AddToCompareDto,
-  RemoveFromCompareDto
+  RemoveFromCompareDto,
+  AddToCartDto,
+  RemoveFromCartDto
 } from '../dto/update-profile.dto'
 import mongoose from 'mongoose'
 
@@ -51,6 +53,16 @@ export interface IUserController extends BaseController {
   ): Promise<void>
   removeFromCompare(
     req: Request<{}, {}, RemoveFromCompareDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  addToCart(
+    req: Request<{}, {}, AddToCartDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  removeFromCart(
+    req: Request<{}, {}, RemoveFromCartDto>,
     res: Response,
     next: NextFunction
   ): Promise<void>

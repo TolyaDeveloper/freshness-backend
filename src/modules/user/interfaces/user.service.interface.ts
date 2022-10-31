@@ -1,7 +1,7 @@
 import { CustomerReviewModelType } from '../../../models/customer-review.model'
 import { ProductModelType } from '../../../models/product.model'
 import { CustomerReviewDto } from '../dto/customer-review.dto'
-import { UpdateProfileDto } from '../dto/update-profile.dto'
+import { AddToCartDto, UpdateProfileDto } from '../dto/update-profile.dto'
 import { UserModelType } from '../../../models/user.model'
 import mongoose from 'mongoose'
 
@@ -30,6 +30,14 @@ export interface IUserService {
     userId: mongoose.Types.ObjectId
   ): Promise<UserModelType | null>
   removeFromCompare(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
+  addToCart(
+    productInfo: AddToCartDto,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
+  removeFromCart(
     productId: mongoose.Types.ObjectId,
     userId: mongoose.Types.ObjectId
   ): Promise<UserModelType | null>
