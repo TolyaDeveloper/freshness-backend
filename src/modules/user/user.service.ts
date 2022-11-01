@@ -4,7 +4,11 @@ import { TYPES } from '../../types'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { IUserRepository } from './interfaces/user.repository.interface'
 import { IUserService } from './interfaces/user.service.interface'
-import { AddToCartDto, UpdateProfileDto } from './dto/update-profile.dto'
+import {
+  AddToCartDto,
+  UpdateCartDto,
+  UpdateProfileDto
+} from './dto/update-profile.dto'
 import { PATH_TO_IMAGES } from '../../constants/common'
 import mongoose from 'mongoose'
 
@@ -93,6 +97,13 @@ class UserService implements IUserService {
     userId: mongoose.Types.ObjectId
   ) {
     return this.userRepository.removeFromCart(productId, userId)
+  }
+
+  public async updateCart(
+    productInfo: UpdateCartDto,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.userRepository.updateCart(productInfo, userId)
   }
 }
 

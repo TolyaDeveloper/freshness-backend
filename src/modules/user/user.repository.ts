@@ -5,7 +5,11 @@ import { SignupDto } from '../auth/dto/signup.dto'
 import { customerReviewModel } from '../../models/customer-review.model'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { productModel } from '../../models/product.model'
-import { AddToCartDto, UpdateProfileDto } from './dto/update-profile.dto'
+import {
+  AddToCartDto,
+  UpdateCartDto,
+  UpdateProfileDto
+} from './dto/update-profile.dto'
 import mongoose from 'mongoose'
 
 @injectable()
@@ -138,6 +142,22 @@ class UserRepository implements IUserRepository {
       userId,
       {
         $pull: { cart: { productId } }
+      },
+      { new: true, projection: { cart: 1 } }
+    )
+  }
+
+  public async updateCart(
+    { productId, quantity, variant }: UpdateCartDto,
+    userId: mongoose.Types.ObjectId
+  ) {
+    // const user = await userModel.findById(userId)
+
+    // user.ca
+    return userModel.findOneAndUpdate(
+      { _id: userId, 'cart.productId': productId },
+      {
+        $set: { 'cart.$.quantity': quantity, 'cart.$.variant': variant }
       },
       { new: true, projection: { cart: 1 } }
     )

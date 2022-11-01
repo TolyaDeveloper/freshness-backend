@@ -63,6 +63,21 @@ class RemoveFromCartDto {
   public productId: mongoose.Types.ObjectId
 }
 
+class UpdateCartDto {
+  @IsNotEmpty()
+  @IsString()
+  public productId: mongoose.Types.ObjectId
+
+  @IsNotEmpty()
+  @IsString()
+  public variant: ProductCartVariantEnum
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(1)
+  public quantity: number
+}
+
 export {
   UpdateProfileDto,
   AddToWishlistDto,
@@ -70,5 +85,6 @@ export {
   AddToCompareDto,
   RemoveFromCompareDto,
   AddToCartDto,
-  RemoveFromCartDto
+  RemoveFromCartDto,
+  UpdateCartDto
 }

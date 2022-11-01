@@ -19,7 +19,8 @@ import {
   AddToCompareDto,
   RemoveFromCompareDto,
   AddToCartDto,
-  RemoveFromCartDto
+  RemoveFromCartDto,
+  UpdateCartDto
 } from './dto/update-profile.dto'
 import { AuthMiddleware } from '../../common/auth.middleware'
 import { MulterMiddleware } from '../../common/multer.middleware'
@@ -113,6 +114,15 @@ class UserController extends BaseController implements IUserController {
         middlewares: [
           new AuthMiddleware(),
           new ValidateMiddleware(RemoveFromCartDto)
+        ]
+      },
+      {
+        method: 'patch',
+        path: '/user/cart/update',
+        func: this.updateCart,
+        middlewares: [
+          new AuthMiddleware(),
+          new ValidateMiddleware(UpdateCartDto)
         ]
       }
     ])
@@ -314,6 +324,29 @@ class UserController extends BaseController implements IUserController {
     try {
       const updatedCart = await this.userService.removeFromCart(
         req.body.productId,
+        req.user._id
+      )
+
+      if (!updatedCart) {
+        throw HttpError.NotFound()
+      }
+
+      res.json(updatedCart)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(500, err.message))
+      }
+    }
+  }
+
+  public async updateCart(
+    req: Request<{}, {}, UpdateCartDto>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const updatedCart = await this.userService.updateCart(
+        req.body,
         req.user._id
       )
 
