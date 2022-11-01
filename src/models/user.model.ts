@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema({
   ],
   cart: [
     {
-      _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
-      amount: { type: Number },
+      productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+      quantity: { type: Number },
       variant: { type: String, enum: ProductCartVariantEnum }
     }
   ],

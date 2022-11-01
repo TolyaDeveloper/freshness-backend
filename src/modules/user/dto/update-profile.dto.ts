@@ -45,7 +45,7 @@ class RemoveFromCompareDto {
 class AddToCartDto {
   @IsNotEmpty()
   @IsString()
-  public _id: mongoose.Types.ObjectId
+  public productId: mongoose.Types.ObjectId
 
   @IsNotEmpty()
   @IsString()
@@ -54,13 +54,13 @@ class AddToCartDto {
   @IsNotEmpty()
   @IsNumber()
   @Min(1)
-  public amount: number
+  public quantity: number
 }
 
 class RemoveFromCartDto {
   @IsNotEmpty()
   @IsString()
-  public _id: mongoose.Types.ObjectId
+  public productId: mongoose.Types.ObjectId
 }
 
 export {

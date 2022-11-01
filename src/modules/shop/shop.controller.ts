@@ -20,7 +20,6 @@ import { ValidateMiddleware } from '../../common/validate.middleware'
 import { RoleMiddleware } from '../../common/role.middleware'
 import { AuthMiddleware } from '../../common/auth.middleware'
 import { ProductReviewDto } from './dto/product-review.dto'
-import { ParsedQs } from 'qs'
 
 @injectable()
 class ShopController extends BaseController implements IShopController {
@@ -72,7 +71,7 @@ class ShopController extends BaseController implements IShopController {
       },
       {
         method: 'get',
-        path: '/products/reviews-questions/count/:productId',
+        path: '/products/review-questions/count/:productId',
         func: this.findReviewsAndQuestionsCount
       },
       {

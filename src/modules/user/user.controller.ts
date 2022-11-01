@@ -313,7 +313,7 @@ class UserController extends BaseController implements IUserController {
   ) {
     try {
       const updatedCart = await this.userService.removeFromCart(
-        req.body._id,
+        req.body.productId,
         req.user._id
       )
 

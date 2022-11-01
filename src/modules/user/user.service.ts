@@ -6,7 +6,6 @@ import { IUserRepository } from './interfaces/user.repository.interface'
 import { IUserService } from './interfaces/user.service.interface'
 import { AddToCartDto, UpdateProfileDto } from './dto/update-profile.dto'
 import { PATH_TO_IMAGES } from '../../constants/common'
-import { UserModelType } from '../../models/user.model'
 import mongoose from 'mongoose'
 
 @injectable()

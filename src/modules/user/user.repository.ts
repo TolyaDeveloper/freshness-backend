@@ -1,6 +1,6 @@
 import { injectable } from 'inversify'
 import { IUserRepository } from './interfaces/user.repository.interface'
-import { userModel, UserModelType } from '../../models/user.model'
+import { userModel } from '../../models/user.model'
 import { SignupDto } from '../auth/dto/signup.dto'
 import { customerReviewModel } from '../../models/customer-review.model'
 import { CustomerReviewDto } from './dto/customer-review.dto'
@@ -11,13 +11,7 @@ import mongoose from 'mongoose'
 @injectable()
 class UserRepository implements IUserRepository {
   public async findUserByEmail(email: string) {
-    return userModel
-      .findOne({ email })
-      .populate(
-        'cart._id',
-        '_id title smallDescription price oldPrice rating imageUri'
-      )
-      .lean()
+    return userModel.findOne({ email }).lean()
   }
 
   public async createUser(credentials: SignupDto) {
@@ -31,13 +25,7 @@ class UserRepository implements IUserRepository {
   }
 
   public async findUserById(id: mongoose.Types.ObjectId) {
-    return userModel
-      .findById(id)
-      .populate(
-        'cart._id',
-        '_id title smallDescription price oldPrice rating imageUri'
-      )
-      .lean()
+    return userModel.findById(id).lean()
   }
 
   public async findCustomerReviews() {
@@ -137,11 +125,7 @@ class UserRepository implements IUserRepository {
       { $push: { cart: productInfo } },
       {
         new: true,
-        projection: { cart: 1 },
-        populate: {
-          path: 'cart._id',
-          select: '_id title smallDescription price oldPrice rating imageUri'
-        }
+        projection: { cart: 1 }
       }
     )
   }
@@ -153,7 +137,7 @@ class UserRepository implements IUserRepository {
     return userModel.findByIdAndUpdate(
       userId,
       {
-        $pull: { cart: { _id: productId } }
+        $pull: { cart: { productId } }
       },
       { new: true, projection: { cart: 1 } }
     )

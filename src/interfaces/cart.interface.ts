@@ -1,3 +1,5 @@
+import mongoose from 'mongoose'
+
 export enum ProductCartVariantEnum {
   PCS = 'Pcs',
   KGS = 'Kgs',
@@ -7,6 +9,6 @@ export enum ProductCartVariantEnum {
 
 export interface ICart {
   variant: ProductCartVariantEnum
-  amount: number
-  _id: string
+  quantity: number
+  productId: mongoose.Types.ObjectId
 }
