@@ -11,6 +11,8 @@ import {
 } from './dto/update-profile.dto'
 import { PATH_TO_IMAGES } from '../../constants/common'
 import mongoose from 'mongoose'
+import { UserModelType } from '../../models/user.model'
+import { HttpError } from '../../exceptions/http-error.class'
 
 @injectable()
 class UserService implements IUserService {
@@ -104,6 +106,24 @@ class UserService implements IUserService {
     userId: mongoose.Types.ObjectId
   ) {
     return this.userRepository.updateCart(productInfo, userId)
+  }
+
+  public async createOrder(
+    products: mongoose.Types.ObjectId[],
+    userId: mongoose.Types.ObjectId
+  ) {
+    const updatedOrdersHistory = await this.userRepository.createOrder(
+      products,
+      userId
+    )
+
+    if (!updatedOrdersHistory) {
+      throw HttpError.NotFound()
+    }
+
+    await this.userRepository.cleanCart(userId)
+
+    return updatedOrdersHistory
   }
 }
 

@@ -84,7 +84,7 @@ class ShopController extends BaseController implements IShopController {
         ]
       },
       {
-        method: 'post',
+        method: 'patch',
         path: '/products/add/review',
         func: this.addProductReview,
         middlewares: [

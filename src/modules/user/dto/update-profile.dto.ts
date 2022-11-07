@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsNumber, Min } from 'class-validator'
+import { IsString, IsNotEmpty, IsNumber, Min, IsArray } from 'class-validator'
 import { ProductCartVariantEnum } from '../../../interfaces/cart.interface'
 import mongoose from 'mongoose'
 
@@ -78,6 +78,13 @@ class UpdateCartDto {
   public quantity: number
 }
 
+class CreateOrderDto {
+  @IsNotEmpty()
+  @IsString({ each: true })
+  @IsArray()
+  public products: mongoose.Types.ObjectId[]
+}
+
 export {
   UpdateProfileDto,
   AddToWishlistDto,
@@ -86,5 +93,6 @@ export {
   RemoveFromCompareDto,
   AddToCartDto,
   RemoveFromCartDto,
-  UpdateCartDto
+  UpdateCartDto,
+  CreateOrderDto
 }

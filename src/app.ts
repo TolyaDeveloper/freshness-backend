@@ -40,9 +40,7 @@ class App {
   }
 
   private useMiddlewares(): void {
-    this.app.use(
-      cors({ origin: this.configService.get('CLIENT_URI'), credentials: true })
-    )
+    this.app.use(cors())
     this.app.use(cookieParser())
     this.app.use(helmet())
     this.app.use(express.json())

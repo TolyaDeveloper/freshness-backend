@@ -56,4 +56,9 @@ export interface IUserRepository {
     productInfo: UpdateCartDto,
     userId: mongoose.Types.ObjectId
   ): Promise<UserModelType | null>
+  cleanCart(userId: mongoose.Types.ObjectId): Promise<UserModelType | null>
+  createOrder(
+    products: mongoose.Types.ObjectId[],
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
 }

@@ -20,7 +20,8 @@ import {
   RemoveFromCompareDto,
   AddToCartDto,
   RemoveFromCartDto,
-  UpdateCartDto
+  UpdateCartDto,
+  CreateOrderDto
 } from './dto/update-profile.dto'
 import { AuthMiddleware } from '../../common/auth.middleware'
 import { MulterMiddleware } from '../../common/multer.middleware'
@@ -123,6 +124,15 @@ class UserController extends BaseController implements IUserController {
         middlewares: [
           new AuthMiddleware(),
           new ValidateMiddleware(UpdateCartDto)
+        ]
+      },
+      {
+        method: 'patch',
+        path: '/user/order/create',
+        func: this.createOrder,
+        middlewares: [
+          new AuthMiddleware(),
+          new ValidateMiddleware(CreateOrderDto)
         ]
       }
     ])
@@ -355,6 +365,25 @@ class UserController extends BaseController implements IUserController {
       }
 
       res.json(updatedCart)
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new HttpError(500, err.message))
+      }
+    }
+  }
+
+  public async createOrder(
+    req: Request<{}, {}, CreateOrderDto>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const updatedOrdersHistory = await this.userService.createOrder(
+        req.body.products,
+        req.user._id
+      )
+
+      res.json(updatedOrdersHistory)
     } catch (err) {
       if (err instanceof Error) {
         return next(new HttpError(500, err.message))

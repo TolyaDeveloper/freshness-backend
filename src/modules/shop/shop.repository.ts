@@ -19,6 +19,7 @@ import {
 } from './interfaces/shop.controller.interface'
 import { handleQueryObject } from '../../utils/handleQueryObject'
 import { PriceTypeSortEnum } from './shop.variables'
+import { SKIP_INTERVAL } from '../../constants/common'
 import { nanoid } from 'nanoid'
 import mongoose from 'mongoose'
 
@@ -155,6 +156,11 @@ class ShopRepository implements IShopRepository {
 
   public async findProducts({ limit, skip, ...rest }: IFindProductsQueries) {
     let sortQuery = {}
+    let handledSkip = skip
+
+    if (rest.page) {
+      handledSkip = (rest.page - 1) * SKIP_INTERVAL
+    }
 
     switch (rest.priceType) {
       case PriceTypeSortEnum.CHEAPEST:
@@ -179,7 +185,7 @@ class ShopRepository implements IShopRepository {
         },
         { reviews: 0, questions: 0 }
       )
-      .skip(skip)
+      .skip(handledSkip)
       .limit(limit)
       .sort(sortQuery)
       .lean()

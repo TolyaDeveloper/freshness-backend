@@ -9,4 +9,6 @@ const PATH_TO_IMAGES = {
 
 const AVATAR_MIME_TYPES = ['image/png', 'image/jpeg']
 
-export { PATH_TO_IMAGES, AVATAR_MIME_TYPES }
+const SKIP_INTERVAL = 9
+
+export { PATH_TO_IMAGES, AVATAR_MIME_TYPES, SKIP_INTERVAL }

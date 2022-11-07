@@ -8,7 +8,8 @@ import {
   RemoveFromCompareDto,
   AddToCartDto,
   RemoveFromCartDto,
-  UpdateCartDto
+  UpdateCartDto,
+  CreateOrderDto
 } from '../dto/update-profile.dto'
 import mongoose from 'mongoose'
 
@@ -69,6 +70,11 @@ export interface IUserController extends BaseController {
   ): Promise<void>
   updateCart(
     req: Request<{}, {}, UpdateCartDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  createOrder(
+    req: Request<{}, {}, CreateOrderDto>,
     res: Response,
     next: NextFunction
   ): Promise<void>

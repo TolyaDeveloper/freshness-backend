@@ -1,6 +1,6 @@
 import { injectable } from 'inversify'
 import { IUserRepository } from './interfaces/user.repository.interface'
-import { userModel } from '../../models/user.model'
+import { userModel, UserModelType } from '../../models/user.model'
 import { SignupDto } from '../auth/dto/signup.dto'
 import { customerReviewModel } from '../../models/customer-review.model'
 import { CustomerReviewDto } from './dto/customer-review.dto'
@@ -151,15 +151,29 @@ class UserRepository implements IUserRepository {
     { productId, quantity, variant }: UpdateCartDto,
     userId: mongoose.Types.ObjectId
   ) {
-    // const user = await userModel.findById(userId)
-
-    // user.ca
     return userModel.findOneAndUpdate(
       { _id: userId, 'cart.productId': productId },
       {
         $set: { 'cart.$.quantity': quantity, 'cart.$.variant': variant }
       },
       { new: true, projection: { cart: 1 } }
+    )
+  }
+
+  public async cleanCart(userId: mongoose.Types.ObjectId) {
+    return userModel.findByIdAndUpdate(userId, { $set: { cart: [] } })
+  }
+
+  public async createOrder(
+    products: mongoose.Types.ObjectId[],
+    userId: mongoose.Types.ObjectId
+  ) {
+    return userModel.findByIdAndUpdate(
+      userId,
+      {
+        $push: { ordersHistory: [...products] }
+      },
+      { new: true, projection: { ordersHistory: 1 } }
     )
   }
 }
