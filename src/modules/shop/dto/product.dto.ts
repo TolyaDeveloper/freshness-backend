@@ -9,7 +9,6 @@ import {
   IsNotEmptyObject,
   IsBoolean
 } from 'class-validator'
-
 import { ProductModelBiologyEnum } from '../../../models/product.model'
 
 class ProductDto {

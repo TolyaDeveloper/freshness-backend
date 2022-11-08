@@ -21,6 +21,7 @@ export interface IGatherCategoryFiltersQueries {
 export interface IFindProductsQueries {
   limit: number
   skip: number
+  page: number
   category: mongoose.Types.ObjectId
   tag: mongoose.Types.ObjectId
   priceType: string

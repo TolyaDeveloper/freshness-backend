@@ -4,9 +4,15 @@ import { TYPES } from '../../types'
 import { CustomerReviewDto } from './dto/customer-review.dto'
 import { IUserRepository } from './interfaces/user.repository.interface'
 import { IUserService } from './interfaces/user.service.interface'
-import { UpdateProfileDto } from './dto/update-profile.dto'
+import {
+  AddToCartDto,
+  UpdateCartDto,
+  UpdateProfileDto
+} from './dto/update-profile.dto'
 import { PATH_TO_IMAGES } from '../../constants/common'
 import mongoose from 'mongoose'
+import { UserModelType } from '../../models/user.model'
+import { HttpError } from '../../exceptions/http-error.class'
 
 @injectable()
 class UserService implements IUserService {
@@ -22,8 +28,8 @@ class UserService implements IUserService {
     return this.userRepository.addCustomerReview(customerReviewDto)
   }
 
-  public async findCartGoods(productIds: mongoose.Types.ObjectId[]) {
-    return this.userRepository.findCartGoods(productIds)
+  public async findProductsByIds(productIds: mongoose.Types.ObjectId[]) {
+    return this.userRepository.findProductsByIds(productIds)
   }
 
   public async updateProfile(
@@ -51,6 +57,73 @@ class UserService implements IUserService {
     }
 
     return updatedProfile
+  }
+
+  public async addToWishlist(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.userRepository.addToWishlist(productId, userId)
+  }
+
+  public async removeFromWishlist(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.userRepository.removeFromWishlist(productId, userId)
+  }
+
+  public async addToCompare(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.userRepository.addToCompare(productId, userId)
+  }
+
+  public async removeFromCompare(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.userRepository.removeFromCompare(productId, userId)
+  }
+
+  public async addToCart(
+    productInfo: AddToCartDto,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.userRepository.addToCart(productInfo, userId)
+  }
+
+  public async removeFromCart(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.userRepository.removeFromCart(productId, userId)
+  }
+
+  public async updateCart(
+    productInfo: UpdateCartDto,
+    userId: mongoose.Types.ObjectId
+  ) {
+    return this.userRepository.updateCart(productInfo, userId)
+  }
+
+  public async createOrder(
+    products: mongoose.Types.ObjectId[],
+    userId: mongoose.Types.ObjectId
+  ) {
+    const updatedOrdersHistory = await this.userRepository.createOrder(
+      products,
+      userId
+    )
+
+    if (!updatedOrdersHistory) {
+      throw HttpError.NotFound()
+    }
+
+    await this.userRepository.cleanCart(userId)
+
+    return updatedOrdersHistory
   }
 }
 

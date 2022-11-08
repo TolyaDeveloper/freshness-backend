@@ -1,6 +1,16 @@
 import { NextFunction, Request, Response } from 'express'
 import { BaseController } from '../../../common/base.controller'
-import { UpdateProfileDto } from '../dto/update-profile.dto'
+import {
+  UpdateProfileDto,
+  AddToWishlistDto,
+  RemoveFromWishlistDto,
+  AddToCompareDto,
+  RemoveFromCompareDto,
+  AddToCartDto,
+  RemoveFromCartDto,
+  UpdateCartDto,
+  CreateOrderDto
+} from '../dto/update-profile.dto'
 import mongoose from 'mongoose'
 
 export interface IFindCartGoodsQueries {
@@ -8,11 +18,6 @@ export interface IFindCartGoodsQueries {
 }
 
 export interface IUserController extends BaseController {
-  updateProfile(
-    req: Request<{}, {}, UpdateProfileDto>,
-    res: Response,
-    next: NextFunction
-  ): Promise<void>
   findCustomerReviews(
     req: Request,
     res: Response,
@@ -23,8 +28,53 @@ export interface IUserController extends BaseController {
     res: Response,
     next: NextFunction
   ): Promise<void>
-  findCartGoods(
+  findProductsByIds(
     req: Request<{}, {}, {}, IFindCartGoodsQueries>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  updateProfile(
+    req: Request<{}, {}, UpdateProfileDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  addToWishlist(
+    req: Request<{}, {}, AddToWishlistDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  removeFromWishlist(
+    req: Request<{}, {}, RemoveFromWishlistDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  addToCompare(
+    req: Request<{}, {}, AddToCompareDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  removeFromCompare(
+    req: Request<{}, {}, RemoveFromCompareDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  addToCart(
+    req: Request<{}, {}, AddToCartDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  removeFromCart(
+    req: Request<{}, {}, RemoveFromCartDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  updateCart(
+    req: Request<{}, {}, UpdateCartDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>
+  createOrder(
+    req: Request<{}, {}, CreateOrderDto>,
     res: Response,
     next: NextFunction
   ): Promise<void>

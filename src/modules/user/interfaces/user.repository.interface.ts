@@ -3,7 +3,11 @@ import { CustomerReviewModelType } from '../../../models/customer-review.model'
 import { SignupDto } from '../../auth/dto/signup.dto'
 import { CustomerReviewDto } from '../dto/customer-review.dto'
 import { ProductModelType } from '../../../models/product.model'
-import { UpdateProfileDto } from '../dto/update-profile.dto'
+import {
+  AddToCartDto,
+  UpdateCartDto,
+  UpdateProfileDto
+} from '../dto/update-profile.dto'
 import mongoose from 'mongoose'
 
 export interface IUserRepository {
@@ -17,11 +21,44 @@ export interface IUserRepository {
   addCustomerReview(
     customerReviewDto: CustomerReviewDto
   ): Promise<CustomerReviewModelType>
-  findCartGoods(
+  findProductsByIds(
     productIds: mongoose.Types.ObjectId[]
   ): Promise<ProductModelType[]>
   updateProfile(
     profileChanges: UpdateProfileDto,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
+  addToWishlist(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
+  removeFromWishlist(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
+  addToCompare(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
+  removeFromCompare(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
+  addToCart(
+    productInfo: AddToCartDto,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
+  removeFromCart(
+    productId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
+  updateCart(
+    productInfo: UpdateCartDto,
+    userId: mongoose.Types.ObjectId
+  ): Promise<UserModelType | null>
+  cleanCart(userId: mongoose.Types.ObjectId): Promise<UserModelType | null>
+  createOrder(
+    products: mongoose.Types.ObjectId[],
     userId: mongoose.Types.ObjectId
   ): Promise<UserModelType | null>
 }
