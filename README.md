@@ -1,7 +1,5 @@
 # Freshness Ecommerce - backend (Beta version)
 
-Ecomerce Next.js web application. With Atomic design pattern
-
 ## Project structure
 
 <ul>
@@ -11,65 +9,34 @@ Ecomerce Next.js web application. With Atomic design pattern
              /src - project source code folder
                 <ul>
                     <li>
-                        /api - global config of axios
+                        /common - common things are stored here (commom middlewares eg validation, role)
                     </li>
                     <li>
-                        /assets - for assets (images, icons ...)
-                    </li>
-                    <li>
-                        /components
-                        <ul>
-                        <li>
-                        atoms - smallest building component in our application (button, input etc.)
-                        </li>
-                        <li>
-                        molecules - e.g combining input and button (we get search component)
-                        </li>
-                        <li>
-                        organisms - this where our logic and business components is (you can use here context, reducer etc.)
-                        </li>
-                         <li>
-                        templates - collection of organisms
-                        </li>
-                        </ul>
+                        /config - injectable service for working with environment variables
                     </li>
                     <li>
                         /constants - for general constants
                     </li>
                     <li>
-                        /context - react context (useReducer used)
+                        /database - service for connection to database
                     </li>
                     <li>
-                        /hooks - store custom hooks here
+                        /exceptions - handling http errors
                     </li>
                      <li>
-                        /interfaces - global application interfaces (user model etc.) 
-                    </li>
-                    <li>
-                        /layout - header, footer
-                    </li>
-                    <li>
-                        /pages - main entrypoints (you can fetch the data from server, you should use appropriate template here)
+                        /interfaces - global application interfaces 
                     </li>
                      <li>
-                        /services - localStorageService, userService...
+                        /models - db models
                     </li>
                     <li>
-                        /styles - for general styles and style variables
+                        /modules - business logic (module consists of controller, service, repository)
+                    </li>
+                    <li>
+                        /services - additional services (working with jwt)
                     </li>
                      <li>
                         /utils - utility functions
-                    </li>
-                    <li>
-                        /validators - rules of form validation
-                    </li>
-                </ul>
-            </li>
-            <li>
-                /__test__ - project tests folder
-                <ul>
-                    <li>
-                        /unit - unit tests, should duplicate project structure
                     </li>
                 </ul>
             </li>
@@ -77,9 +44,40 @@ Ecomerce Next.js web application. With Atomic design pattern
     </li>
 </ul>
 
+### Setup environment variables
+
+<ul>
+    <li>PORT=8000</li>
+    <li>CLIENT_URI=http://localhost:3000</li>
+    <li>SERVER_URI=http://localhost:8000</li>
+    <li>IMAGES_URI=http://localhost:8000</li>
+    <li>IMAGES_URI=http://localhost:8000</li>
+    <br />
+    <li>DATABASE_URI_DEVELOPMENT=mongodb://localhost:27017/freshness</li>
+    <li>DATABASE_URI_PRODUCTION=</li>
+    <br />
+    <li>SALT=</li>
+    <li>JWT_ACCESS_SECRET=</li>
+    <li>JWT_ACCESS_ALGORITHM=</li>
+    <li>JWT_ACCESS_EXPIRES_IN=</li>
+    <li>JWT_REFRESH_SECRET=</li>
+    <li>JWT_REFRESH_ALGORITHM=</li>
+    <li>JWT_REFRESH_EXPIRES_IN=</li>
+    <li>COOKIES_JWT_REFRESH_EXPIRES_IN=</li>
+    <br />
+    <li>MAIL_HOST=</li>
+    <li>MAIL_PORT=</li>
+    <li>MAIL_AUTH_USER=</li>
+    <li>MAIL_AUTH_PASS=</li>
+</ul>
+
+### Installation
+
+### run `npm ci`
+
 #### Code style
 
-The project has installed and configured ES Lint and Prettier. All rules are set, you can learn them in .eslintrc.json file.
+The project has installed and configured ES Lint and Prettier. All rules are set, you can learn them in .eslintrc file.
 
 ## Available Scripts
 
@@ -88,16 +86,8 @@ In the project directory, you can run:
 ### `npm run dev`
 
 Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Open [http://localhost:8000](http://localhost:8000) to view it in the browser.
 
 ### `npm run build`
 
-Builds the app for production to the `.next` folder.\
+Builds the app for production to the `dist` folder.\
